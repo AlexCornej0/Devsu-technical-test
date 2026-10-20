@@ -227,3 +227,16 @@ app/__pycache__/
 app/*.log
 app/*.pot
 app/*.pyc
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+tfplan
+
+# Django
+staticfiles/
+
+# Chart validation (CI)
+rendered/
