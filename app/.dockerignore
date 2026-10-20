@@ -1,0 +1,22 @@
+# Local environment and secrets
+.venv/
+.env
+.env.*
+!.env.example
+
+# Local data
+*.sqlite3
+*.sqlite3-*
+staticfiles/
+
+# Python and tooling caches
+__pycache__/
+*.py[cod]
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Docs and VCS
+.git/
+README.md
