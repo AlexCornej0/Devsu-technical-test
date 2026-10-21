@@ -1,12 +1,15 @@
+# syntax=docker/dockerfile:1
+
 # ---------- build the virtualenv ----------
 FROM python:3.14-slim@sha256:a2b82f3c48559aa0a8446d9af49826b6e2b2016f4cd2afabfe6013ec53729170 AS builder
 
 WORKDIR /build
 COPY requirements.txt .
 RUN python -m venv /opt/venv \
- && /opt/venv/bin/pip install --no-cache-dir --require-hashes -r requirements.txt
+ && /opt/venv/bin/pip install --no-cache-dir --require-hashes -r requirements.txt \
+ && /opt/venv/bin/pip uninstall --yes --root-user-action=ignore pip
 
-# ----------minimal runtime ----------
+# ---------- minimal runtime ----------
 FROM python:3.14-slim@sha256:a2b82f3c48559aa0a8446d9af49826b6e2b2016f4cd2afabfe6013ec53729170 AS runtime
 
 LABEL org.opencontainers.image.source="https://github.com/AlexCornej0/Devsu-technical-test" \
@@ -17,7 +20,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/opt/venv/bin:$PATH"
 
-RUN groupadd --system --gid 10001 app \
+# No package manager at runtime: pip (and the libraries it bundles) is removed
+RUN python -m pip uninstall --yes --root-user-action=ignore pip \
+ && groupadd --system --gid 10001 app \
  && useradd --system --uid 10001 --gid app --no-create-home --shell /usr/sbin/nologin app \
  && mkdir -p /data \
  && chown app:app /data
