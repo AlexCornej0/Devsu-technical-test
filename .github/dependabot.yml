@@ -1,0 +1,29 @@
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: /app
+    target-branch: develop
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      python:
+        patterns: ["*"]
+
+  - package-ecosystem: docker
+    directory: /app
+    target-branch: develop
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: develop
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ["*"]

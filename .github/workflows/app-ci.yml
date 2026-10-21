@@ -1,0 +1,76 @@
+name: app-ci
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.14"
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: app/requirements-dev.txt
+      - name: Install lint tools (hash-checked)
+        run: pip install --require-hashes -r requirements-dev.txt
+      - name: Ruff (style, bugs, security rules)
+        run: ruff check --output-format=github .
+      - name: Install Hadolint
+        working-directory: .
+        run: scripts/install-tool.sh hadolint
+      - name: Hadolint (Dockerfile)
+        run: hadolint Dockerfile
+
+  test:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: app
+    env:
+      DATABASE_NAME: db.sqlite3
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: app/requirements*.txt
+      - name: Temporary Django key for the tests (random per run, masked, used nowhere else)
+        run: |
+          key=$(python -c "import secrets; print(secrets.token_urlsafe(50))")
+          echo "::add-mask::$key"
+          echo "DJANGO_SECRET_KEY=$key" >> "$GITHUB_ENV"
+      - name: Install dependencies (hash-checked)
+        run: pip install --require-hashes -r requirements.txt -r requirements-dev.txt
+      - name: Django system checks
+        run: python manage.py check
+      - name: No model change without its migration
+        run: python manage.py makemigrations --check --dry-run
+      - name: Unit tests with coverage
+        run: coverage run manage.py test
+      - name: Coverage report (fails under 90 %)
+        run: |
+          coverage xml --fail-under=0
+          coverage report --format=markdown >> "$GITHUB_STEP_SUMMARY"
+          coverage report
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: coverage
+          path: app/coverage.xml
+          retention-days: 7
+          if-no-files-found: error
