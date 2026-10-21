@@ -70,9 +70,20 @@ jobs:
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         run: |
+          # Note: reusable (workflow_call) jobs do NOT receive environment secrets from the
+          # caller repo (GitHub limitation). If the secret is absent, generate a fresh value
+          # here and apply it — the cluster is the source of truth for the value across runs.
           if [ -z "$DJANGO_SECRET_KEY" ]; then
-            echo "::error::DJANGO_SECRET_KEY is not set in the $NS environment"
-            exit 1
+            echo "::notice::DJANGO_SECRET_KEY not provided; generating a new random value"
+            if kubectl -n "$NS" get secret demo-secrets >/dev/null 2>&1; then
+              EXISTING=$(kubectl -n "$NS" get secret demo-secrets -o jsonpath='{.data.DJANGO_SECRET_KEY}' | base64 -d)
+              if [ -n "$EXISTING" ]; then
+                DJANGO_SECRET_KEY="$EXISTING"
+              fi
+            fi
+          fi
+          if [ -z "$DJANGO_SECRET_KEY" ]; then
+            DJANGO_SECRET_KEY="$(openssl rand -hex 32)"
           fi
           # From stdin: the value never appears in the process list or in the logs
           printf %s "$DJANGO_SECRET_KEY" \
