@@ -70,6 +70,7 @@ jobs:
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         run: |
+          # The Django secret is supplied externally (GitHub environment secret)
           if [ -z "$DJANGO_SECRET_KEY" ]; then
             echo "::error::DJANGO_SECRET_KEY is not set in the $NS environment"
             exit 1

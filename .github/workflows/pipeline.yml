@@ -55,6 +55,7 @@ jobs:
     permissions:
       contents: read
       id-token: write # OIDC token for Workload Identity Federation (no JSON keys)
+    secrets: inherit # environment secrets (e.g. DJANGO_SECRET_KEY) reach the reusable job
     with:
       environment: ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'qa' && 'qa' || 'dev' }}
       digest: ${{ needs.image.outputs.digest }}
