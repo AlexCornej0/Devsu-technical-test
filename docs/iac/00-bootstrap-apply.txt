@@ -12,7 +12,7 @@ Terraform will perform the following actions:
   + resource "google_organization_iam_member" "admin" {
       + etag   = (known after apply)
       + id     = (known after apply)
-      + member = "user:user:example-user@example.com"
+      + member = "user:example-user@example.com"
       + org_id = "ORG_ID"
       + role   = "roles/orgpolicy.policyAdmin"
     }
@@ -21,7 +21,7 @@ Terraform will perform the following actions:
   + resource "google_organization_iam_member" "admin" {
       + etag   = (known after apply)
       + id     = (known after apply)
-      + member = "user:user:example-user@example.com"
+      + member = "user:example-user@example.com"
       + org_id = "ORG_ID"
       + role   = "roles/resourcemanager.folderAdmin"
     }
@@ -30,7 +30,7 @@ Terraform will perform the following actions:
   + resource "google_organization_iam_member" "admin" {
       + etag   = (known after apply)
       + id     = (known after apply)
-      + member = "user:user:example-user@example.com"
+      + member = "user:example-user@example.com"
       + org_id = "ORG_ID"
       + role   = "roles/resourcemanager.projectCreator"
     }
@@ -202,9 +202,9 @@ google_storage_bucket.tfstate: Creating...
 google_organization_iam_member.admin["roles/orgpolicy.policyAdmin"]: Still creating... [00m10s elapsed]
 google_organization_iam_member.admin["roles/resourcemanager.folderAdmin"]: Still creating... [00m10s elapsed]
 google_organization_iam_member.admin["roles/resourcemanager.projectCreator"]: Still creating... [00m10s elapsed]
-google_organization_iam_member.admin["roles/resourcemanager.folderAdmin"]: Creation complete after 14s [id=ORG_ID/roles/resourcemanager.folderAdmin/user:user:example-user@example.com]
-google_organization_iam_member.admin["roles/resourcemanager.projectCreator"]: Creation complete after 14s [id=ORG_ID/roles/resourcemanager.projectCreator/user:user:example-user@example.com]
-google_organization_iam_member.admin["roles/orgpolicy.policyAdmin"]: Creation complete after 14s [id=ORG_ID/roles/orgpolicy.policyAdmin/user:user:example-user@example.com]
+google_organization_iam_member.admin["roles/resourcemanager.folderAdmin"]: Creation complete after 14s [id=ORG_ID/roles/resourcemanager.folderAdmin/user:example-user@example.com]
+google_organization_iam_member.admin["roles/resourcemanager.projectCreator"]: Creation complete after 14s [id=ORG_ID/roles/resourcemanager.projectCreator/user:example-user@example.com]
+google_organization_iam_member.admin["roles/orgpolicy.policyAdmin"]: Creation complete after 14s [id=ORG_ID/roles/orgpolicy.policyAdmin/user:example-user@example.com]
 
 Error: googleapi: Error 409: Your previous request to create the named bucket succeeded and you already own it., conflict
 
