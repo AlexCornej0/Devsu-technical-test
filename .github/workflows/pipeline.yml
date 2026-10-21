@@ -44,3 +44,6 @@ jobs:
     if: github.event_name == 'pull_request'
     needs: [image, chart]
     uses: ./.github/workflows/integration.yml
+
+  iac:
+    uses: ./.github/workflows/iac.yml

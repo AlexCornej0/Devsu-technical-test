@@ -1,8 +1,0 @@
-state_bucket      = "dev-portfolio-devops-tfstate"
-github_repository = "ADMIN/Technical-test"
-
-environments = {
-  dev  = { host_prefix = "dev" }
-  qa   = { host_prefix = "qa" }
-  prod = { host_prefix = "app" }
-}

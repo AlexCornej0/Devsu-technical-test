@@ -27,3 +27,13 @@ updates:
     groups:
       actions:
         patterns: ["*"]
+
+  - package-ecosystem: terraform
+    directories:
+      - /infra/terraform/stacks/*
+      - /infra/terraform/modules/*
+    target-branch: develop
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
