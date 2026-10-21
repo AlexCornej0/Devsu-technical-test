@@ -86,6 +86,29 @@ Two charts:
 
 The `DJANGO_SECRET_KEY` Secret is created by the pipeline from a GitHub Environment secret; it is never in the repository or in Helm values.
 ## Infrastructure as Code
+
+Everything after `gcloud auth login` is Terraform: 5 stacks applied in order, each with its own state in a
+private, versioned GCS bucket, reading the previous stack through `terraform_remote_state`.
+
+| Stack | Creates |
+| --- | --- |
+| `00-bootstrap` | Imports the hand-made seed project, enables its APIs, creates the state bucket and grants the admin the folder/project/policy roles |
+| `10-foundation` | `portfolio` folder, organization policies (no service account keys, uniform bucket access, no default network), platform project with a budget |
+| `20-platform` | Custom VPC, static IP, zonal GKE Standard (Dataplane V2, Workload Identity, Shielded Nodes, dedicated node SA), Workload Identity Federation with one deployer per environment |
+| `30-cluster` | Namespaces, Traefik on the static IP, the bootstrap chart (PVC + RBAC) per environment |
+| `40-github` | Environments with branch policies and prod approval, Actions variables and secrets, branch ruleset with required checks |
+
+Reusable modules live in `infra/terraform/modules` (`project`, `network`, `gke`, `github-wif`), each with its own README.
+Apply and output logs: [`docs/iac/`](docs/iac/).
+
+```powershell
+# apply a stack (00-bootstrap has a one-time local-state step, see the runbook)
+terraform -chdir=infra/terraform/stacks/<stack> init -backend-config="bucket=<state bucket>"
+terraform -chdir=infra/terraform/stacks/<stack> plan -out tfplan
+terraform -chdir=infra/terraform/stacks/<stack> apply tfplan
+```
+
+Destroy in reverse order (40 → 10). Delete the PVCs before `20-platform`, or their disks outlive the cluster.
 ## Security
 ## Evidence
 ## Design decisions and trade-offs

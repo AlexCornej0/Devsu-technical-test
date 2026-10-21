@@ -7,3 +7,19 @@ misconfigurations:
     statement: >-
       The CI deployer must create and update the app's Service, Ingress and NetworkPolicy.
       The Role is namespaced; the deployer has no cluster-scoped permissions.
+  
+
+  # IaC job (scans infra/terraform/)
+  - id: GCP-0061
+    paths:
+      - "modules/gke/main.tf"
+    statement: >-
+      GitHub-hosted runners use changing IPs, so an IP allowlist on the control plane would
+      block the pipeline. Access still requires Google IAM authentication plus Kubernetes RBAC.
+      Production: DNS-based endpoint with IAM, or a private cluster with self-hosted runners.
+  - id: GCP-0010
+    paths:
+      - "stacks/00-bootstrap/main.tf"
+    statement: >-
+      The seed project was created with gcloud without the Compute API, so it has no default
+      network; auto_create_network only applies at creation. The platform project sets it to false.

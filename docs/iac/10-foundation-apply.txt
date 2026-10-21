@@ -1,0 +1,301 @@
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # google_folder.this["portfolio"] will be created
+  + resource "google_folder" "this" {
+      + configured_capabilities = (known after apply)
+      + create_time             = (known after apply)
+      + deletion_policy         = "DELETE"
+      + deletion_protection     = false
+      + display_name            = "portfolio"
+      + folder_id               = (known after apply)
+      + id                      = (known after apply)
+      + lifecycle_state         = (known after apply)
+      + management_project      = (known after apply)
+      + name                    = (known after apply)
+      + parent                  = "organizations/ORG_ID"
+    }
+
+  # google_org_policy_policy.folder_boolean["portfolio/compute.skipDefaultNetworkCreation"] will be created
+  + resource "google_org_policy_policy" "folder_boolean" {
+      + deletion_policy = (known after apply)
+      + etag            = (known after apply)
+      + id              = (known after apply)
+      + name            = (known after apply)
+      + parent          = (known after apply)
+
+      + spec {
+          + etag        = (known after apply)
+          + update_time = (known after apply)
+
+          + rules {
+              + enforce = "TRUE"
+            }
+        }
+    }
+
+  # google_org_policy_policy.folder_boolean["portfolio/iam.disableServiceAccountKeyCreation"] will be created
+  + resource "google_org_policy_policy" "folder_boolean" {
+      + deletion_policy = (known after apply)
+      + etag            = (known after apply)
+      + id              = (known after apply)
+      + name            = (known after apply)
+      + parent          = (known after apply)
+
+      + spec {
+          + etag        = (known after apply)
+          + update_time = (known after apply)
+
+          + rules {
+              + enforce = "TRUE"
+            }
+        }
+    }
+
+  # google_org_policy_policy.folder_boolean["portfolio/storage.uniformBucketLevelAccess"] will be created
+  + resource "google_org_policy_policy" "folder_boolean" {
+      + deletion_policy = (known after apply)
+      + etag            = (known after apply)
+      + id              = (known after apply)
+      + name            = (known after apply)
+      + parent          = (known after apply)
+
+      + spec {
+          + etag        = (known after apply)
+          + update_time = (known after apply)
+
+          + rules {
+              + enforce = "TRUE"
+            }
+        }
+    }
+
+  # random_id.project_suffix["platform"] will be created
+  + resource "random_id" "project_suffix" {
+      + b64_std     = (known after apply)
+      + b64_url     = (known after apply)
+      + byte_length = 2
+      + dec         = (known after apply)
+      + hex         = (known after apply)
+      + id          = (known after apply)
+    }
+
+  # module.project["platform"].google_billing_budget.this[0] will be created
+  + resource "google_billing_budget" "this" {
+      + billing_account = "BILLING_ID"
+      + deletion_policy = (known after apply)
+      + display_name    = (known after apply)
+      + id              = (known after apply)
+      + name            = (known after apply)
+
+      + amount {
+          + specified_amount {
+              + currency_code = (known after apply)
+              + units         = "150"
+            }
+        }
+
+      + budget_filter {
+          + credit_types_treatment = "INCLUDE_ALL_CREDITS"
+          + labels                 = (known after apply)
+          + projects               = (known after apply)
+          + services               = (known after apply)
+        }
+
+      + threshold_rules {
+          + spend_basis       = "CURRENT_SPEND"
+          + threshold_percent = 0.5
+        }
+      + threshold_rules {
+          + spend_basis       = "CURRENT_SPEND"
+          + threshold_percent = 0.9
+        }
+      + threshold_rules {
+          + spend_basis       = "CURRENT_SPEND"
+          + threshold_percent = 1
+        }
+    }
+
+  # module.project["platform"].google_project.this will be created
+  + resource "google_project" "this" {
+      + auto_create_network = false
+      + billing_account     = "BILLING_ID"
+      + deletion_policy     = "DELETE"
+      + effective_labels    = {
+          + "goog-terraform-provisioned" = "true"
+          + "managed-by"                 = "terraform"
+        }
+      + folder_id           = (known after apply)
+      + id                  = (known after apply)
+      + labels              = {
+          + "managed-by" = "terraform"
+        }
+      + name                = "portfolio-platform"
+      + number              = (known after apply)
+      + project_id          = (known after apply)
+      + terraform_labels    = {
+          + "goog-terraform-provisioned" = "true"
+          + "managed-by"                 = "terraform"
+        }
+    }
+
+  # module.project["platform"].google_project_service.this["cloudresourcemanager.googleapis.com"] will be created
+  + resource "google_project_service" "this" {
+      + deletion_policy    = "DELETE"
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = (known after apply)
+      + service            = "cloudresourcemanager.googleapis.com"
+    }
+
+  # module.project["platform"].google_project_service.this["compute.googleapis.com"] will be created
+  + resource "google_project_service" "this" {
+      + deletion_policy    = "DELETE"
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = (known after apply)
+      + service            = "compute.googleapis.com"
+    }
+
+  # module.project["platform"].google_project_service.this["container.googleapis.com"] will be created
+  + resource "google_project_service" "this" {
+      + deletion_policy    = "DELETE"
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = (known after apply)
+      + service            = "container.googleapis.com"
+    }
+
+  # module.project["platform"].google_project_service.this["iam.googleapis.com"] will be created
+  + resource "google_project_service" "this" {
+      + deletion_policy    = "DELETE"
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = (known after apply)
+      + service            = "iam.googleapis.com"
+    }
+
+  # module.project["platform"].google_project_service.this["iamcredentials.googleapis.com"] will be created
+  + resource "google_project_service" "this" {
+      + deletion_policy    = "DELETE"
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = (known after apply)
+      + service            = "iamcredentials.googleapis.com"
+    }
+
+  # module.project["platform"].google_project_service.this["logging.googleapis.com"] will be created
+  + resource "google_project_service" "this" {
+      + deletion_policy    = "DELETE"
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = (known after apply)
+      + service            = "logging.googleapis.com"
+    }
+
+  # module.project["platform"].google_project_service.this["monitoring.googleapis.com"] will be created
+  + resource "google_project_service" "this" {
+      + deletion_policy    = "DELETE"
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = (known after apply)
+      + service            = "monitoring.googleapis.com"
+    }
+
+  # module.project["platform"].google_project_service.this["serviceusage.googleapis.com"] will be created
+  + resource "google_project_service" "this" {
+      + deletion_policy    = "DELETE"
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = (known after apply)
+      + service            = "serviceusage.googleapis.com"
+    }
+
+  # module.project["platform"].google_project_service.this["sts.googleapis.com"] will be created
+  + resource "google_project_service" "this" {
+      + deletion_policy    = "DELETE"
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = (known after apply)
+      + service            = "sts.googleapis.com"
+    }
+
+Plan: 16 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + folders  = {
+      + portfolio = (known after apply)
+    }
+  + projects = {
+      + platform = (known after apply)
+    }
+random_id.project_suffix["platform"]: Creating...
+random_id.project_suffix["platform"]: Creation complete after 0s [id=m6A]
+google_folder.this["portfolio"]: Creating...
+google_folder.this["portfolio"]: Still creating... [00m10s elapsed]
+google_folder.this["portfolio"]: Creation complete after 12s [id=folders/553072699706]
+google_org_policy_policy.folder_boolean["portfolio/compute.skipDefaultNetworkCreation"]: Creating...
+google_org_policy_policy.folder_boolean["portfolio/storage.uniformBucketLevelAccess"]: Creating...
+google_org_policy_policy.folder_boolean["portfolio/iam.disableServiceAccountKeyCreation"]: Creating...
+google_org_policy_policy.folder_boolean["portfolio/compute.skipDefaultNetworkCreation"]: Creation complete after 1s [id=folders/553072699706/policies/compute.skipDefaultNetworkCreation]
+google_org_policy_policy.folder_boolean["portfolio/iam.disableServiceAccountKeyCreation"]: Creation complete after 1s [id=folders/553072699706/policies/iam.disableServiceAccountKeyCreation]
+google_org_policy_policy.folder_boolean["portfolio/storage.uniformBucketLevelAccess"]: Creation complete after 1s [id=folders/553072699706/policies/storage.uniformBucketLevelAccess]
+module.project["platform"].google_project.this: Creating...
+module.project["platform"].google_project.this: Still creating... [00m10s elapsed]
+module.project["platform"].google_project.this: Still creating... [00m20s elapsed]
+module.project["platform"].google_project.this: Still creating... [00m30s elapsed]
+module.project["platform"].google_project.this: Still creating... [00m40s elapsed]
+module.project["platform"].google_project.this: Still creating... [00m50s elapsed]
+module.project["platform"].google_project.this: Still creating... [01m00s elapsed]
+module.project["platform"].google_project.this: Creation complete after 1m4s [id=projects/portfolio-platform-9ba0]
+module.project["platform"].google_project_service.this["iamcredentials.googleapis.com"]: Creating...
+module.project["platform"].google_project_service.this["container.googleapis.com"]: Creating...
+module.project["platform"].google_project_service.this["compute.googleapis.com"]: Creating...
+module.project["platform"].google_project_service.this["logging.googleapis.com"]: Creating...
+module.project["platform"].google_project_service.this["cloudresourcemanager.googleapis.com"]: Creating...
+module.project["platform"].google_project_service.this["serviceusage.googleapis.com"]: Creating...
+module.project["platform"].google_project_service.this["sts.googleapis.com"]: Creating...
+module.project["platform"].google_project_service.this["iam.googleapis.com"]: Creating...
+module.project["platform"].google_project_service.this["monitoring.googleapis.com"]: Creating...
+module.project["platform"].google_billing_budget.this[0]: Creating...
+module.project["platform"].google_billing_budget.this[0]: Creation complete after 1s [id=billingAccounts/BILLING_ID/budgets/8b49c333-4305-47d1-b5da-bde11b718ea6]
+module.project["platform"].google_project_service.this["compute.googleapis.com"]: Creation complete after 4s [id=portfolio-platform-9ba0/compute.googleapis.com]
+module.project["platform"].google_project_service.this["iamcredentials.googleapis.com"]: Still creating... [00m10s elapsed]
+module.project["platform"].google_project_service.this["container.googleapis.com"]: Still creating... [00m10s elapsed]
+module.project["platform"].google_project_service.this["serviceusage.googleapis.com"]: Still creating... [00m10s elapsed]
+module.project["platform"].google_project_service.this["iam.googleapis.com"]: Still creating... [00m10s elapsed]
+module.project["platform"].google_project_service.this["logging.googleapis.com"]: Still creating... [00m10s elapsed]
+module.project["platform"].google_project_service.this["sts.googleapis.com"]: Still creating... [00m10s elapsed]
+module.project["platform"].google_project_service.this["cloudresourcemanager.googleapis.com"]: Still creating... [00m10s elapsed]
+module.project["platform"].google_project_service.this["monitoring.googleapis.com"]: Still creating... [00m10s elapsed]
+module.project["platform"].google_project_service.this["container.googleapis.com"]: Still creating... [00m20s elapsed]
+module.project["platform"].google_project_service.this["iamcredentials.googleapis.com"]: Still creating... [00m20s elapsed]
+module.project["platform"].google_project_service.this["sts.googleapis.com"]: Still creating... [00m20s elapsed]
+module.project["platform"].google_project_service.this["logging.googleapis.com"]: Still creating... [00m20s elapsed]
+module.project["platform"].google_project_service.this["cloudresourcemanager.googleapis.com"]: Still creating... [00m20s elapsed]
+module.project["platform"].google_project_service.this["iam.googleapis.com"]: Still creating... [00m20s elapsed]
+module.project["platform"].google_project_service.this["serviceusage.googleapis.com"]: Still creating... [00m20s elapsed]
+module.project["platform"].google_project_service.this["monitoring.googleapis.com"]: Still creating... [00m20s elapsed]
+module.project["platform"].google_project_service.this["cloudresourcemanager.googleapis.com"]: Creation complete after 22s [id=portfolio-platform-9ba0/cloudresourcemanager.googleapis.com]
+module.project["platform"].google_project_service.this["iamcredentials.googleapis.com"]: Creation complete after 22s [id=portfolio-platform-9ba0/iamcredentials.googleapis.com]
+module.project["platform"].google_project_service.this["monitoring.googleapis.com"]: Creation complete after 22s [id=portfolio-platform-9ba0/monitoring.googleapis.com]
+module.project["platform"].google_project_service.this["sts.googleapis.com"]: Creation complete after 22s [id=portfolio-platform-9ba0/sts.googleapis.com]
+module.project["platform"].google_project_service.this["serviceusage.googleapis.com"]: Creation complete after 22s [id=portfolio-platform-9ba0/serviceusage.googleapis.com]
+module.project["platform"].google_project_service.this["container.googleapis.com"]: Creation complete after 22s [id=portfolio-platform-9ba0/container.googleapis.com]
+module.project["platform"].google_project_service.this["iam.googleapis.com"]: Creation complete after 22s [id=portfolio-platform-9ba0/iam.googleapis.com]
+module.project["platform"].google_project_service.this["logging.googleapis.com"]: Creation complete after 22s [id=portfolio-platform-9ba0/logging.googleapis.com]
+
+Apply complete! Resources: 16 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+folders = {
+  "portfolio" = "folders/553072699706"
+}
+projects = {
+  "platform" = "portfolio-platform-9ba0"
+}
