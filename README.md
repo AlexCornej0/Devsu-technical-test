@@ -25,7 +25,39 @@ pip-compile --generate-hashes --strip-extras -o requirements.txt requirements.in
 | `DJANGO_DEBUG` | no | `False` | Never `True` outside local development. |
 | `DJANGO_ALLOWED_HOSTS` | no | empty | Comma-separated hosts Django will answer. Must include `localhost` (probes). |
 | `DJANGO_LOG_LEVEL` | no | `INFO` | Root log level, written to stdout. |
+
+### Docker
+
+```powershell
+docker build -t demo-api:local app
+docker volume create demo-data-local
+docker run --rm --env-file app/.env -e DATABASE_NAME=/data/db.sqlite3 -v demo-data-local:/data demo-api:local python manage.py migrate
+docker run -d --name demo --env-file app/.env -e DATABASE_NAME=/data/db.sqlite3 -v demo-data-local:/data -p 8000:8000 demo-api:local
+```
 ## CI/CD pipeline
+
+An orchestrator, `.github/workflows/pipeline.yml`, calls one reusable workflow per stage (`app-ci`, `sonar`,
+`image`), so each stage can be read and debugged on its own while the run keeps a single dependency graph.
+CodeQL runs as its own workflow. Every action is pinned to a full commit SHA and every job starts from a
+read-only `GITHUB_TOKEN`.
+
+```mermaid
+flowchart LR
+  app[app: lint + test] --> image
+  app --> sonar
+```
+
+| Check | Workflow | Runs on | What it checks | Required |
+| --- | --- | --- | --- | --- |
+| `app / lint` | `app-ci.yml` | every run | Ruff (style, bugs, Bandit security rules), Hadolint | yes |
+| `app / test` | `app-ci.yml` | every run | Django checks, missing migrations, unit tests, coverage ≥ 90 % | yes |
+| `sonar / scan` | `sonar.yml` | `develop` and PRs to `develop` | SonarQube Cloud static analysis and coverage | no (free plan) |
+| `analyze` | `codeql.yml` | every run except Dependabot, and weekly | CodeQL security queries for Python and for the workflows | no |
+| `image / build` | `image.yml` | every run | Build, Trivy (fails on fixable HIGH/CRITICAL), publish to GHCR only on merge, provenance attestation | yes |
+
+**Image identity.** The image is identified by the git tree hash of `app/` (`app-<tree>` tag). On a push, if that
+image already exists it is reused, so promoting `develop → qa → main` deploys the exact bytes that were tested.
+Deployments always use the digest (`image@sha256:...`), never a tag.
 ## Kubernetes resources
 ## Infrastructure as Code
 ## Security

@@ -1,0 +1,23 @@
+[run]
+branch = True
+source = .
+# Paths in coverage.xml relative to app/, so Sonar can map them in another job
+relative_files = True
+omit =
+    manage.py
+    */migrations/*
+    demo/asgi.py
+    demo/wsgi.py
+    # Tests measure the code; they are not the code being measured
+    */tests.py
+    */tests_*.py
+    # Operational scripts: exercised in the cluster by the migration Job and helm test
+    ops/*
+    .venv/*
+
+[report]
+fail_under = 90
+show_missing = True
+
+[xml]
+output = coverage.xml
