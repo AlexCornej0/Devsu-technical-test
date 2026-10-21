@@ -36,3 +36,6 @@ jobs:
       security-events: write
       id-token: write
       attestations: write
+
+  chart:
+    uses: ./.github/workflows/chart.yml

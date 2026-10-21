@@ -1,0 +1,10 @@
+ingress:
+  host: app.127.0.0.1.nip.io
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: "1"
+    memory: 256Mi

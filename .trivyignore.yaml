@@ -1,0 +1,9 @@
+# Findings accepted on purpose. Each entry is scoped to one path (relative to the
+# scanned folder) and says why. Used by: trivy config --ignorefile .trivyignore.yaml
+misconfigurations:
+  - id: KSV-0056
+    paths:
+      - "bootstrap.yaml"
+    statement: >-
+      The CI deployer must create and update the app's Service, Ingress and NetworkPolicy.
+      The Role is namespaced; the deployer has no cluster-scoped permissions.
