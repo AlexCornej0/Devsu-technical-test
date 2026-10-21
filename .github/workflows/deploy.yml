@@ -1,0 +1,137 @@
+name: deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: GitHub Environment and Kubernetes namespace (dev, qa or prod)
+        type: string
+        required: true
+      digest:
+        description: Image digest to deploy (sha256:...)
+        type: string
+        required: true
+      reused:
+        description: Whether the image was reused from an earlier build (for the summary)
+        type: string
+        required: false
+        default: "false"
+
+permissions:
+  contents: read
+
+env:
+  HELM_VERSION: v4.3.1
+
+jobs:
+  gke:
+    runs-on: ubuntu-24.04
+    environment:
+      name: ${{ inputs.environment }}
+      url: ${{ steps.verify.outputs.url }}
+    permissions:
+      contents: read
+      id-token: write # OIDC token for Workload Identity Federation (no JSON keys)
+    concurrency:
+      group: deploy-${{ github.ref_name }}
+      cancel-in-progress: false
+    env:
+      NS: ${{ inputs.environment }} # namespace = environment name
+      DIGEST: ${{ inputs.digest }}
+      APP_HOST: ${{ vars.APP_HOST }}
+    steps:
+      - name: Inputs are valid
+        run: |
+          if ! [[ "$DIGEST" =~ ^sha256:[a-f0-9]{64}$ ]]; then
+            echo "::error::digest input is not a sha256 digest: '$DIGEST'"
+            exit 1
+          fi
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093
+        with:
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ vars.DEPLOYER_SA }}
+
+      - uses: google-github-actions/get-gke-credentials@3da1e46a907576cefaa90c484278bb5b259dd395
+        with:
+          cluster_name: ${{ vars.GKE_CLUSTER }}
+          location: ${{ vars.GKE_LOCATION }}
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+
+      - uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310
+        with:
+          version: ${{ env.HELM_VERSION }}
+
+      - name: Secret (idempotent) and its hash
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+        run: |
+          if [ -z "$DJANGO_SECRET_KEY" ]; then
+            echo "::error::DJANGO_SECRET_KEY is not set in the $NS environment"
+            exit 1
+          fi
+          # From stdin: the value never appears in the process list or in the logs
+          printf %s "$DJANGO_SECRET_KEY" \
+            | kubectl -n "$NS" create secret generic demo-secrets --from-file=DJANGO_SECRET_KEY=/dev/stdin \
+                --dry-run=client -o yaml \
+            | kubectl apply -f -
+          # Changes only when the secret changes, and forces a rolling restart
+          echo "SECRET_HASH=$(printf %s "$DJANGO_SECRET_KEY" | sha256sum | cut -c1-16)" >> "$GITHUB_ENV"
+
+      - name: Deploy by digest
+        run: |
+          helm upgrade --install demo k8s/demo-chart -n "$NS" -f "k8s/demo-chart/values-$NS.yaml" \
+            --set image.digest="$DIGEST" \
+            --set ingress.host="$APP_HOST" \
+            --set networkPolicy.enabled=true \
+            --set-string podAnnotations.secret-hash="$SECRET_HASH" \
+            --rollback-on-failure --timeout 5m
+
+      - run: scripts/wait-available.sh "$NS" demo 2 180
+
+      - name: Smoke test (rolls back if it fails)
+        run: |
+          if ! helm test demo -n "$NS" --logs; then
+            prev=$(helm history demo -n "$NS" -o json \
+              | jq -r '[.[] | select(.status == "superseded")] | last | .revision // empty')
+            if [ -n "$prev" ]; then
+              echo "::error::Smoke test failed, rolling back to revision $prev"
+              helm rollback demo "$prev" -n "$NS" --wait --timeout 5m
+            fi
+            exit 1
+          fi
+
+      - name: Public URL answers
+        id: verify
+        run: |
+          url="http://$APP_HOST"
+          curl -fsS --retry 10 --retry-delay 6 --retry-all-errors "$url/health/ready"
+          curl -fsS "$url/api/users/" > /dev/null
+          echo "url=$url/api/users/" >> "$GITHUB_OUTPUT"
+
+      - name: Summary
+        if: always()
+        env:
+          REUSED: ${{ inputs.reused }}
+        run: |
+          {
+            echo "### Deploy to \`$NS\`"
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| URL | http://$APP_HOST/api/users/ |"
+            echo "| Digest | \`$DIGEST\` |"
+            echo "| Reused image | $REUSED |"
+            echo
+            echo '```text'
+            helm history demo -n "$NS" --max 3 2>&1 || true
+            kubectl -n "$NS" get deploy,hpa,pods -o wide 2>&1 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Diagnostics
+        if: failure()
+        run: scripts/diagnostics.sh "$NS"

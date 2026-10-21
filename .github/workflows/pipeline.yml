@@ -47,3 +47,15 @@ jobs:
 
   iac:
     uses: ./.github/workflows/iac.yml
+
+  deploy:
+    if: github.event_name != 'pull_request' && contains(fromJSON('["develop", "qa", "main"]'), github.ref_name)
+    needs: [image, chart, iac]
+    uses: ./.github/workflows/deploy.yml
+    permissions:
+      contents: read
+      id-token: write # OIDC token for Workload Identity Federation (no JSON keys)
+    with:
+      environment: ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'qa' && 'qa' || 'dev' }}
+      digest: ${{ needs.image.outputs.digest }}
+      reused: ${{ needs.image.outputs.reused }}
