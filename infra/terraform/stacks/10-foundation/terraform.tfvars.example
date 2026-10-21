@@ -1,0 +1,32 @@
+org_id          = "539926265654"
+billing_account = "XXXXXX-XXXXXX-XXXXXX"
+seed_project_id = "dev-portfolio-devops"
+
+folders = {
+  portfolio = { display_name = "portfolio" }
+}
+
+folder_boolean_policies = [
+  "iam.disableServiceAccountKeyCreation",
+  "storage.uniformBucketLevelAccess",
+  "compute.skipDefaultNetworkCreation",
+]
+
+projects = {
+  platform = {
+    name          = "portfolio-platform"
+    folder        = "portfolio"
+    budget_amount = 150
+    apis = [
+      "cloudresourcemanager.googleapis.com",
+      "compute.googleapis.com",
+      "container.googleapis.com",
+      "iam.googleapis.com",
+      "iamcredentials.googleapis.com",
+      "logging.googleapis.com",
+      "monitoring.googleapis.com",
+      "serviceusage.googleapis.com",
+      "sts.googleapis.com",
+    ]
+  }
+}
