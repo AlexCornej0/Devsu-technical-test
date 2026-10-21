@@ -1,0 +1,285 @@
+data.terraform_remote_state.platform: Reading...
+data.terraform_remote_state.platform: Read complete after 1s
+data.google_client_config.this: Reading...
+data.google_container_cluster.this: Reading...
+data.google_client_config.this: Read complete after 0s [id=projects/portfolio-platform-9ba0/regions//zones/]
+data.google_container_cluster.this: Read complete after 1s [id=projects/portfolio-platform-9ba0/locations/us-central1-c/clusters/portfolio-gke]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # helm_release.bootstrap["dev"] will be created
+  + resource "helm_release" "bootstrap" {
+      + atomic                     = false
+      + chart                      = "./../../../../k8s/bootstrap"
+      + cleanup_on_fail            = false
+      + create_namespace           = false
+      + dependency_update          = false
+      + disable_crd_hooks          = false
+      + disable_openapi_validation = false
+      + disable_webhooks           = false
+      + force_update               = false
+      + id                         = (known after apply)
+      + lint                       = false
+      + max_history                = 0
+      + metadata                   = (known after apply)
+      + name                       = "bootstrap"
+      + namespace                  = "dev"
+      + pass_credentials           = false
+      + recreate_pods              = false
+      + render_subchart_notes      = true
+      + replace                    = false
+      + reset_values               = false
+      + reuse_values               = false
+      + set_wo                     = (write-only attribute)
+      + skip_crds                  = false
+      + status                     = "deployed"
+      + take_ownership             = false
+      + timeout                    = 300
+      + upgrade_install            = false
+      + values                     = [
+          + <<-EOT
+                "deployer": "deployer-dev@portfolio-platform-9ba0.iam.gserviceaccount.com"
+            EOT,
+        ]
+      + verify                     = false
+      + version                    = "0.1.0"
+      + wait                       = false
+      + wait_for_jobs              = false
+    }
+
+  # helm_release.bootstrap["prod"] will be created
+  + resource "helm_release" "bootstrap" {
+      + atomic                     = false
+      + chart                      = "./../../../../k8s/bootstrap"
+      + cleanup_on_fail            = false
+      + create_namespace           = false
+      + dependency_update          = false
+      + disable_crd_hooks          = false
+      + disable_openapi_validation = false
+      + disable_webhooks           = false
+      + force_update               = false
+      + id                         = (known after apply)
+      + lint                       = false
+      + max_history                = 0
+      + metadata                   = (known after apply)
+      + name                       = "bootstrap"
+      + namespace                  = "prod"
+      + pass_credentials           = false
+      + recreate_pods              = false
+      + render_subchart_notes      = true
+      + replace                    = false
+      + reset_values               = false
+      + reuse_values               = false
+      + set_wo                     = (write-only attribute)
+      + skip_crds                  = false
+      + status                     = "deployed"
+      + take_ownership             = false
+      + timeout                    = 300
+      + upgrade_install            = false
+      + values                     = [
+          + <<-EOT
+                "deployer": "deployer-prod@portfolio-platform-9ba0.iam.gserviceaccount.com"
+            EOT,
+        ]
+      + verify                     = false
+      + version                    = "0.1.0"
+      + wait                       = false
+      + wait_for_jobs              = false
+    }
+
+  # helm_release.bootstrap["qa"] will be created
+  + resource "helm_release" "bootstrap" {
+      + atomic                     = false
+      + chart                      = "./../../../../k8s/bootstrap"
+      + cleanup_on_fail            = false
+      + create_namespace           = false
+      + dependency_update          = false
+      + disable_crd_hooks          = false
+      + disable_openapi_validation = false
+      + disable_webhooks           = false
+      + force_update               = false
+      + id                         = (known after apply)
+      + lint                       = false
+      + max_history                = 0
+      + metadata                   = (known after apply)
+      + name                       = "bootstrap"
+      + namespace                  = "qa"
+      + pass_credentials           = false
+      + recreate_pods              = false
+      + render_subchart_notes      = true
+      + replace                    = false
+      + reset_values               = false
+      + reuse_values               = false
+      + set_wo                     = (write-only attribute)
+      + skip_crds                  = false
+      + status                     = "deployed"
+      + take_ownership             = false
+      + timeout                    = 300
+      + upgrade_install            = false
+      + values                     = [
+          + <<-EOT
+                "deployer": "deployer-qa@portfolio-platform-9ba0.iam.gserviceaccount.com"
+            EOT,
+        ]
+      + verify                     = false
+      + version                    = "0.1.0"
+      + wait                       = false
+      + wait_for_jobs              = false
+    }
+
+  # helm_release.traefik will be created
+  + resource "helm_release" "traefik" {
+      + atomic                     = false
+      + chart                      = "traefik"
+      + cleanup_on_fail            = false
+      + create_namespace           = false
+      + dependency_update          = false
+      + disable_crd_hooks          = false
+      + disable_openapi_validation = false
+      + disable_webhooks           = false
+      + force_update               = false
+      + id                         = (known after apply)
+      + lint                       = false
+      + max_history                = 0
+      + metadata                   = (known after apply)
+      + name                       = "traefik"
+      + namespace                  = "traefik"
+      + pass_credentials           = false
+      + recreate_pods              = false
+      + render_subchart_notes      = true
+      + replace                    = false
+      + repository                 = "https://traefik.github.io/charts"
+      + reset_values               = false
+      + reuse_values               = false
+      + set_wo                     = (write-only attribute)
+      + skip_crds                  = false
+      + status                     = "deployed"
+      + take_ownership             = false
+      + timeout                    = 600
+      + upgrade_install            = false
+      + values                     = [
+          + <<-EOT
+                "service":
+                  "spec":
+                    "loadBalancerIP": "136.71.241.0"
+            EOT,
+        ]
+      + verify                     = false
+      + version                    = "42.0.0"
+      + wait                       = true
+      + wait_for_jobs              = false
+    }
+
+  # kubernetes_namespace_v1.this["dev"] will be created
+  + resource "kubernetes_namespace_v1" "this" {
+      + id                               = (known after apply)
+      + wait_for_default_service_account = false
+
+      + metadata {
+          + generation       = (known after apply)
+          + labels           = {
+              + "app.kubernetes.io/part-of" = "portfolio"
+            }
+          + name             = "dev"
+          + resource_version = (known after apply)
+          + uid              = (known after apply)
+        }
+    }
+
+  # kubernetes_namespace_v1.this["prod"] will be created
+  + resource "kubernetes_namespace_v1" "this" {
+      + id                               = (known after apply)
+      + wait_for_default_service_account = false
+
+      + metadata {
+          + generation       = (known after apply)
+          + labels           = {
+              + "app.kubernetes.io/part-of" = "portfolio"
+            }
+          + name             = "prod"
+          + resource_version = (known after apply)
+          + uid              = (known after apply)
+        }
+    }
+
+  # kubernetes_namespace_v1.this["qa"] will be created
+  + resource "kubernetes_namespace_v1" "this" {
+      + id                               = (known after apply)
+      + wait_for_default_service_account = false
+
+      + metadata {
+          + generation       = (known after apply)
+          + labels           = {
+              + "app.kubernetes.io/part-of" = "portfolio"
+            }
+          + name             = "qa"
+          + resource_version = (known after apply)
+          + uid              = (known after apply)
+        }
+    }
+
+  # kubernetes_namespace_v1.this["traefik"] will be created
+  + resource "kubernetes_namespace_v1" "this" {
+      + id                               = (known after apply)
+      + wait_for_default_service_account = false
+
+      + metadata {
+          + generation       = (known after apply)
+          + labels           = {
+              + "app.kubernetes.io/part-of" = "portfolio"
+            }
+          + name             = "traefik"
+          + resource_version = (known after apply)
+          + uid              = (known after apply)
+        }
+    }
+
+Plan: 8 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + ingress_ip = "136.71.241.0"
+  + namespaces = [
+      + "dev",
+      + "prod",
+      + "qa",
+      + "traefik",
+    ]
+kubernetes_namespace_v1.this["traefik"]: Creating...
+kubernetes_namespace_v1.this["prod"]: Creating...
+kubernetes_namespace_v1.this["dev"]: Creating...
+kubernetes_namespace_v1.this["qa"]: Creating...
+kubernetes_namespace_v1.this["dev"]: Creation complete after 1s [id=dev]
+kubernetes_namespace_v1.this["qa"]: Creation complete after 1s [id=qa]
+kubernetes_namespace_v1.this["traefik"]: Creation complete after 1s [id=traefik]
+kubernetes_namespace_v1.this["prod"]: Creation complete after 1s [id=prod]
+helm_release.bootstrap["qa"]: Creating...
+helm_release.bootstrap["dev"]: Creating...
+helm_release.bootstrap["prod"]: Creating...
+helm_release.traefik: Creating...
+helm_release.bootstrap["dev"]: Creation complete after 4s [id=bootstrap]
+helm_release.bootstrap["qa"]: Creation complete after 4s [id=bootstrap]
+helm_release.bootstrap["prod"]: Creation complete after 4s [id=bootstrap]
+helm_release.traefik: Still creating... [00m10s elapsed]
+helm_release.traefik: Still creating... [00m20s elapsed]
+helm_release.traefik: Still creating... [00m30s elapsed]
+helm_release.traefik: Still creating... [00m40s elapsed]
+helm_release.traefik: Still creating... [00m50s elapsed]
+helm_release.traefik: Still creating... [01m00s elapsed]
+helm_release.traefik: Still creating... [01m10s elapsed]
+helm_release.traefik: Creation complete after 1m11s [id=traefik]
+
+Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+ingress_ip = "136.71.241.0"
+namespaces = tolist([
+  "dev",
+  "prod",
+  "qa",
+  "traefik",
+])

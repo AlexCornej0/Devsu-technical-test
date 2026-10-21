@@ -1,0 +1,689 @@
+data.terraform_remote_state.foundation: Reading...
+data.terraform_remote_state.foundation: Read complete after 1s
+module.github_wif.google_service_account.deployer["prod"]: Refreshing state... [id=projects/portfolio-platform-9ba0/serviceAccounts/deployer-prod@portfolio-platform-9ba0.iam.gserviceaccount.com]
+module.github_wif.google_service_account.deployer["qa"]: Refreshing state... [id=projects/portfolio-platform-9ba0/serviceAccounts/deployer-qa@portfolio-platform-9ba0.iam.gserviceaccount.com]
+module.gke.google_service_account.nodes: Refreshing state... [id=projects/portfolio-platform-9ba0/serviceAccounts/portfolio-gke-nodes@portfolio-platform-9ba0.iam.gserviceaccount.com]
+module.github_wif.google_service_account.deployer["dev"]: Refreshing state... [id=projects/portfolio-platform-9ba0/serviceAccounts/deployer-dev@portfolio-platform-9ba0.iam.gserviceaccount.com]
+module.network.google_compute_network.this: Refreshing state... [id=projects/portfolio-platform-9ba0/global/networks/portfolio-vpc]
+module.github_wif.google_iam_workload_identity_pool.this: Refreshing state... [id=projects/portfolio-platform-9ba0/locations/global/workloadIdentityPools/github]
+module.network.google_compute_address.ingress: Refreshing state... [id=projects/portfolio-platform-9ba0/regions/us-central1/addresses/portfolio-vpc-ingress]
+module.gke.google_project_iam_member.nodes: Refreshing state... [id=portfolio-platform-9ba0/roles/container.defaultNodeServiceAccount/serviceAccount:portfolio-gke-nodes@portfolio-platform-9ba0.iam.gserviceaccount.com]
+module.github_wif.google_project_iam_member.cluster_viewer["prod"]: Refreshing state... [id=portfolio-platform-9ba0/roles/container.clusterViewer/serviceAccount:deployer-prod@portfolio-platform-9ba0.iam.gserviceaccount.com]
+module.github_wif.google_project_iam_member.cluster_viewer["dev"]: Refreshing state... [id=portfolio-platform-9ba0/roles/container.clusterViewer/serviceAccount:deployer-dev@portfolio-platform-9ba0.iam.gserviceaccount.com]
+module.github_wif.google_project_iam_member.cluster_viewer["qa"]: Refreshing state... [id=portfolio-platform-9ba0/roles/container.clusterViewer/serviceAccount:deployer-qa@portfolio-platform-9ba0.iam.gserviceaccount.com]
+module.network.google_compute_subnetwork.this: Refreshing state... [id=projects/portfolio-platform-9ba0/regions/us-central1/subnetworks/portfolio-vpc-us-central1]
+module.github_wif.google_service_account_iam_member.workload_identity_user["qa"]: Refreshing state... [id=projects/portfolio-platform-9ba0/serviceAccounts/deployer-qa@portfolio-platform-9ba0.iam.gserviceaccount.com/roles/iam.workloadIdentityUser/principal://iam.googleapis.com/projects/172214868856/locations/global/workloadIdentityPools/github/subject/repo:AlexCornej0/Devsu-technical-test:environment:qa]
+module.github_wif.google_service_account_iam_member.workload_identity_user["dev"]: Refreshing state... [id=projects/portfolio-platform-9ba0/serviceAccounts/deployer-dev@portfolio-platform-9ba0.iam.gserviceaccount.com/roles/iam.workloadIdentityUser/principal://iam.googleapis.com/projects/172214868856/locations/global/workloadIdentityPools/github/subject/repo:AlexCornej0/Devsu-technical-test:environment:dev]
+module.github_wif.google_service_account_iam_member.workload_identity_user["prod"]: Refreshing state... [id=projects/portfolio-platform-9ba0/serviceAccounts/deployer-prod@portfolio-platform-9ba0.iam.gserviceaccount.com/roles/iam.workloadIdentityUser/principal://iam.googleapis.com/projects/172214868856/locations/global/workloadIdentityPools/github/subject/repo:AlexCornej0/Devsu-technical-test:environment:prod]
+module.github_wif.google_iam_workload_identity_pool_provider.this: Refreshing state... [id=projects/portfolio-platform-9ba0/locations/global/workloadIdentityPools/github/providers/github-oidc]
+module.gke.google_container_cluster.this: Refreshing state... [id=projects/portfolio-platform-9ba0/locations/us-central1-a/clusters/portfolio-gke]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # module.gke.google_container_cluster.this is tainted, so must be replaced
+-/+ resource "google_container_cluster" "this" {
+      ~ autopilot_privileged_admission           = [] -> (known after apply)
+      + cluster_ipv4_cidr                        = (known after apply)
+      ~ default_max_pods_per_node                = 110 -> (known after apply)
+      + emulated_version                         = (known after apply)
+      - enable_autopilot                         = false -> null
+      ~ enable_intranode_visibility              = false -> (known after apply)
+      ~ enable_l4_ilb_subsetting                 = false -> (known after apply)
+      - enable_tpu                               = false -> null
+      + endpoint                                 = (known after apply)
+      ~ id                                       = "projects/portfolio-platform-9ba0/locations/us-central1-a/clusters/portfolio-gke" -> (known after apply)
+      ~ label_fingerprint                        = "78cdf2f6" -> (known after apply)
+      ~ location                                 = "us-central1-a" -> "us-central1-c"
+      ~ logging_service                          = "logging.googleapis.com/kubernetes" -> (known after apply)
+      ~ master_version                           = "1.36.4-gke.1391002" -> (known after apply)
+      ~ monitoring_service                       = "monitoring.googleapis.com/kubernetes" -> (known after apply)
+        name                                     = "portfolio-gke"
+      ~ node_locations                           = [] -> (known after apply)
+      ~ node_version                             = "1.36.4-gke.1391002" -> (known after apply)
+      + operation                                = (known after apply)
+      + private_ipv6_google_access               = (known after apply)
+      - resource_labels                          = {} -> null
+      ~ self_link                                = "https://container.googleapis.com/v1/projects/portfolio-platform-9ba0/zones/us-central1-a/clusters/portfolio-gke" -> (known after apply)
+      + services_ipv4_cidr                       = (known after apply)
+      + tpu_ipv4_cidr_block                      = (known after apply)
+        # (20 unchanged attributes hidden)
+
+      ~ addons_config (known after apply)
+      - addons_config {
+          - dns_cache_config {
+              - enabled = true -> null
+            }
+          - gce_persistent_disk_csi_driver_config {
+              - enabled = true -> null
+            }
+          - gcp_filestore_csi_driver_config {
+              - enabled = true -> null
+            }
+          - network_policy_config {
+              - disabled = true -> null
+            }
+          - node_readiness_config {
+              - enabled = false -> null
+            }
+        }
+
+      ~ anonymous_authentication_config (known after apply)
+      - anonymous_authentication_config {
+          - mode = "LIMITED" -> null
+        }
+
+      ~ authenticator_groups_config (known after apply)
+
+      ~ autopilot_cluster_policy_config (known after apply)
+
+      - binary_authorization {
+          - enabled         = false -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      ~ cluster_autoscaling (known after apply)
+      - cluster_autoscaling {
+          - auto_provisioning_locations   = [] -> null
+          - autoscaling_profile           = "BALANCED" -> null
+          - default_compute_class_enabled = false -> null
+          - enabled                       = false -> null
+
+          - auto_provisioning_defaults {
+              - disk_size         = 0 -> null
+              - image_type        = "COS_CONTAINERD" -> null
+              - oauth_scopes      = [
+                  - "https://www.googleapis.com/auth/devstorage.read_only",
+                  - "https://www.googleapis.com/auth/logging.write",
+                  - "https://www.googleapis.com/auth/monitoring",
+                  - "https://www.googleapis.com/auth/service.management.readonly",
+                  - "https://www.googleapis.com/auth/servicecontrol",
+                  - "https://www.googleapis.com/auth/trace.append",
+                ] -> null
+              - service_account   = "default" -> null
+                # (3 unchanged attributes hidden)
+
+              - management {
+                  - auto_repair     = true -> null
+                  - auto_upgrade    = true -> null
+                  - upgrade_options = [] -> null
+                }
+            }
+        }
+
+      ~ confidential_nodes (known after apply)
+
+      ~ control_plane_endpoints_config (known after apply)
+      - control_plane_endpoints_config {
+          - dns_endpoint_config {
+              - allow_external_traffic    = false -> null
+              - enable_k8s_certs_via_dns  = false -> null
+              - enable_k8s_tokens_via_dns = false -> null
+              - endpoint                  = "gke-e46a59e8aeb442b2a6843603f5f96829e0c4-172214868856.us-central1-a.gke.goog" -> null
+            }
+          - ip_endpoints_config {
+              - enabled = true -> null
+            }
+        }
+
+      ~ cost_management_config (known after apply)
+
+      ~ database_encryption (known after apply)
+      - database_encryption {
+          - state    = "DECRYPTED" -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      ~ default_snat_status (known after apply)
+      - default_snat_status {
+          - disabled = false -> null
+        }
+
+      ~ enterprise_config (known after apply)
+      - enterprise_config {
+          - cluster_tier = "STANDARD" -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      ~ gateway_api_config (known after apply)
+
+      ~ gke_auto_upgrade_config (known after apply)
+
+      ~ identity_service_config (known after apply)
+
+      ~ ip_allocation_policy {
+          + cluster_ipv4_cidr_block       = (known after apply)
+          + services_ipv4_cidr_block      = (known after apply)
+            # (3 unchanged attributes hidden)
+
+          ~ auto_ipam_config (known after apply)
+
+          ~ network_tier_config (known after apply)
+          - network_tier_config {
+              - network_tier = "NETWORK_TIER_DEFAULT" -> null
+            }
+
+          ~ pod_cidr_overprovision_config (known after apply)
+          - pod_cidr_overprovision_config {
+              - disabled = false -> null
+            }
+        }
+
+      ~ logging_config (known after apply)
+      - logging_config {
+          - enable_components = [
+              - "SYSTEM_COMPONENTS",
+              - "WORKLOADS",
+            ] -> null
+        }
+
+      ~ master_auth {
+          + client_certificate     = (known after apply)
+          + client_key             = (sensitive value)
+          ~ cluster_ca_certificate = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVMRENDQXBTZ0F3SUJBZ0lRQmMzZUNHS2V0eTEySmNMWWxMUGs3akFOQmdrcWhraUc5dzBCQVFzRkFEQXYKTVMwd0t3WURWUVFERXlSall6VXdabVEwT0MwMU9XSTJMVFEyWlRVdFltRmhZeTB5TVRZMlpUUTBZVEZsWW1NdwpJQmNOTWpZeE1ESXhNVGsxTWpRMldoZ1BNakExTmpFd01UTXlNRFV5TkRaYU1DOHhMVEFyQmdOVkJBTVRKR05qCk5UQm1aRFE0TFRVNVlqWXRORFpsTlMxaVlXRmpMVEl4TmpabE5EUmhNV1ZpWXpDQ0FhSXdEUVlKS29aSWh2Y04KQVFFQkJRQURnZ0dQQURDQ0FZb0NnZ0dCQUtyWGlIeFVST2x1ZzhUU3JXNkxXeE5ENWdHMTRkamRBWktMYjN2egp4cTRRdXhyMjczSlpETUxRMFQ2QlNlbW1QeDBGS1NMNXVPenYzNkZxRWYvMXhoZXFRRERFVWhyQ2RjVEt5VG5pCkxybXlUY3ZyQ3paSHY3akszYlVXc0VQRHpZVUZ1NDNPVjdxUS9xUExzKzRrODZyeU9KV0wxSXlSSzVJM0VOSkwKMmpKY0Q0di80ck9OQXNtWW5scnFMU3ZBd0pOU1YrRVhGL09sc2dPd05sWGlhOTVvMmM0dGJUNkNQRDFFZUkzMwpMWGdVUTRhNlRSeHBlMVc4UWE5cHVsbDNHMkZCNDZad3JmaFdnMGNNcm1qR3czL0wzcGc2bU8rK1loMU4rNlRTCnNXM2RQYlIwS3VkOWNib2dVRjNFNlNITlp2c0lrajVaVFlnZVFDRWlzTEI3TzN6Sk5FTmU5WnN1cWRDRHduamYKMUVwSmtJeDFtMkNOZ3JGZk42b0JSQ042MVZCczk0dkhWVlN2Tm50OEx5LzFLMy9YczUvbzNaVzFhZS8vVHF5TQp5QlZwU09qWldCeUowZmFyMzRyeFF5VUNNdmJIKzY2OElLOTBLdHZJVEpYM2dIUldoQWpvRUVqMWZjNlBCVHFrCmR6WFY1aEpEOUtFM0VlbnJKd3kxdkI5M2h3SURBUUFCbzBJd1FEQU9CZ05WSFE4QkFmOEVCQU1DQWdRd0R3WUQKVlIwVEFRSC9CQVV3QXdFQi96QWRCZ05WSFE0RUZnUVV6QU8zdGRvZUI1dkUwQ0R3Zk9qbnJTRHpNNGN3RFFZSgpLb1pJaHZjTkFRRUxCUUFEZ2dHQkFHL0loRkZpZTU2alQzRjBRVGplWWlaeVpHRzhOeTBXd3JkQ1dvU2VjZEg1CjdmSmkxY2Qwa3BjY2ZQUXU5VW9kREpySXlGQ2RxU21MVXBnZlZ0bkNuaS9uQ0ZnL2xhVG9zN2toY3VkSm44VWMKaG1RK0tpMitYOGxmbjdlNmlkT0xwb3RtV0ZxQzF3eURHTzFGUk04Rk85UUtIczVEYXQxV0NyUVRuVitjYnErNAowWExUY2VtSVhqOGwxZnlFb01kMmJReG5zNXVjVkZmZWpuc2wvQU03UlBuRXVpM21YNnBxaFphcWRsZ1lZMG9VClpFZGtHc3VyZ3JHWXBCSUdCeUp2OWs2QzVJSkNQSTJZWVpzQ0FRUGxLWmZydWhXVTMveXREM25hWlhYc2hpaDYKUFpkcnRNb2kvTFNqeXhRK2dWL1d5L2N5ckw3Wks3dlRJVnhTOWVMUFhrSmhWZ2xQVjJpb0dYOURuOGRIMGM0QQpsWDY2SURtSUVIZ0xiMXZOTWIzV2VNNmUxcFYyZ1JpdFFLQjJZRVFHRGhXQWRQUXZRVEFjV3g1emJtTWZmL2tFClRGN3c3QkNtWVIvN2s2R1l1WjUrK1p6L3kxVkF4SE03VW4vNmJ5ZlBaTHRSQnNLaWJEV21LR3NQbWJ5Qk5UazUKRnpreUp1YnNMWEh5UXVLc0x4b200dz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K" -> (known after apply)
+
+            # (1 unchanged block hidden)
+        }
+
+      ~ master_authorized_networks_config (known after apply)
+
+      ~ mesh_certificates (known after apply)
+
+      ~ monitoring_config (known after apply)
+      - monitoring_config {
+          - enable_components = [
+              - "CADVISOR",
+              - "DAEMONSET",
+              - "DCGM",
+              - "DEPLOYMENT",
+              - "HPA",
+              - "JOBSET",
+              - "KUBELET",
+              - "POD",
+              - "STATEFULSET",
+              - "STORAGE",
+              - "SYSTEM_COMPONENTS",
+            ] -> null
+
+          - advanced_datapath_observability_config {
+              - enable_metrics = false -> null
+              - enable_relay   = false -> null
+            }
+
+          - managed_prometheus {
+              - enabled = true -> null
+            }
+        }
+
+      - network_policy {
+          - enabled  = false -> null
+          - provider = "PROVIDER_UNSPECIFIED" -> null
+        }
+
+      ~ node_config (known after apply)
+      - node_config {
+          - disk_size_gb                = 100 -> null
+          - disk_type                   = "pd-balanced" -> null
+          - effective_taints            = [] -> null
+          - enable_confidential_storage = false -> null
+          - flex_start                  = false -> null
+          - image_type                  = "COS_CONTAINERD" -> null
+          - labels                      = {} -> null
+          - local_ssd_count             = 0 -> null
+          - logging_variant             = "DEFAULT" -> null
+          - machine_type                = "e2-medium" -> null
+          - metadata                    = {
+              - "disable-legacy-endpoints" = "true"
+            } -> null
+          - oauth_scopes                = [
+              - "https://www.googleapis.com/auth/devstorage.read_only",
+              - "https://www.googleapis.com/auth/logging.write",
+              - "https://www.googleapis.com/auth/monitoring",
+              - "https://www.googleapis.com/auth/service.management.readonly",
+              - "https://www.googleapis.com/auth/servicecontrol",
+              - "https://www.googleapis.com/auth/trace.append",
+            ] -> null
+          - preemptible                 = false -> null
+          - resource_labels             = {
+              - "goog-gke-node-pool-provisioning-model" = "on-demand"
+            } -> null
+          - resource_manager_tags       = {} -> null
+          - service_account             = "default" -> null
+          - spot                        = false -> null
+          - storage_pools               = [] -> null
+          - tags                        = [] -> null
+            # (6 unchanged attributes hidden)
+
+          - boot_disk {
+              - disk_type              = "pd-balanced" -> null
+              - provisioned_iops       = 0 -> null
+              - provisioned_throughput = 0 -> null
+              - size_gb                = 100 -> null
+            }
+
+          - kubelet_config {
+              - allowed_unsafe_sysctls                      = [] -> null
+              - container_log_max_files                     = 0 -> null
+              - cpu_cfs_quota                               = false -> null
+              - eviction_max_pod_grace_period_seconds       = 0 -> null
+              - image_gc_high_threshold_percent             = 0 -> null
+              - image_gc_low_threshold_percent              = 0 -> null
+              - insecure_kubelet_readonly_port_enabled      = "FALSE" -> null
+              - max_parallel_image_pulls                    = 2 -> null
+              - pod_pids_limit                              = 0 -> null
+              - shutdown_grace_period_critical_pods_seconds = 0 -> null
+              - shutdown_grace_period_seconds               = 0 -> null
+              - single_process_oom_kill                     = false -> null
+                # (5 unchanged attributes hidden)
+            }
+
+          - node_image_config {
+              - image         = "gke-1364-gke1391002-cos-129-19506-448-8-c-pre" -> null
+              - image_project = "gke-node-images" -> null
+            }
+
+          - shielded_instance_config {
+              - enable_integrity_monitoring = true -> null
+              - enable_secure_boot          = false -> null
+            }
+
+          - windows_node_config {
+                # (1 unchanged attribute hidden)
+            }
+
+          - workload_metadata_config {
+              - mode = "GKE_METADATA" -> null
+            }
+        }
+
+      ~ node_creation_config (known after apply)
+      - node_creation_config {
+          - node_creation_mode = "VIA_KUBELET" -> null
+        }
+
+      ~ node_pool (known after apply)
+      - node_pool {
+          - ignore_node_count_changes   = false -> null
+          - initial_node_count          = 1 -> null
+          - instance_group_urls         = [] -> null
+          - managed_instance_group_urls = [] -> null
+          - max_pods_per_node           = 110 -> null
+          - name                        = "default-pool" -> null
+          - node_count                  = 0 -> null
+          - node_locations              = [
+              - "us-central1-a",
+            ] -> null
+          - version                     = "1.36.4-gke.1391002" -> null
+            # (1 unchanged attribute hidden)
+
+          - management {
+              - auto_repair  = true -> null
+              - auto_upgrade = true -> null
+            }
+
+          - network_config {
+              - create_pod_range            = false -> null
+              - enable_private_nodes        = false -> null
+              - pod_range                   = "pods" -> null
+              - subnetwork                  = "projects/portfolio-platform-9ba0/regions/us-central1/subnetworks/portfolio-vpc-us-central1" -> null
+                # (2 unchanged attributes hidden)
+            }
+
+          - node_config {
+              - disk_size_gb                = 100 -> null
+              - disk_type                   = "pd-balanced" -> null
+              - effective_taints            = [] -> null
+              - enable_confidential_storage = false -> null
+              - flex_start                  = false -> null
+              - image_type                  = "COS_CONTAINERD" -> null
+              - labels                      = {} -> null
+              - local_ssd_count             = 0 -> null
+              - logging_variant             = "DEFAULT" -> null
+              - machine_type                = "e2-medium" -> null
+              - metadata                    = {
+                  - "disable-legacy-endpoints" = "true"
+                } -> null
+              - oauth_scopes                = [
+                  - "https://www.googleapis.com/auth/devstorage.read_only",
+                  - "https://www.googleapis.com/auth/logging.write",
+                  - "https://www.googleapis.com/auth/monitoring",
+                  - "https://www.googleapis.com/auth/service.management.readonly",
+                  - "https://www.googleapis.com/auth/servicecontrol",
+                  - "https://www.googleapis.com/auth/trace.append",
+                ] -> null
+              - preemptible                 = false -> null
+              - resource_labels             = {
+                  - "goog-gke-node-pool-provisioning-model" = "on-demand"
+                } -> null
+              - resource_manager_tags       = {} -> null
+              - service_account             = "default" -> null
+              - spot                        = false -> null
+              - storage_pools               = [] -> null
+              - tags                        = [] -> null
+                # (6 unchanged attributes hidden)
+
+              - boot_disk {
+                  - disk_type              = "pd-balanced" -> null
+                  - provisioned_iops       = 0 -> null
+                  - provisioned_throughput = 0 -> null
+                  - size_gb                = 100 -> null
+                }
+
+              - kubelet_config {
+                  - allowed_unsafe_sysctls                      = [] -> null
+                  - container_log_max_files                     = 0 -> null
+                  - cpu_cfs_quota                               = false -> null
+                  - eviction_max_pod_grace_period_seconds       = 0 -> null
+                  - image_gc_high_threshold_percent             = 0 -> null
+                  - image_gc_low_threshold_percent              = 0 -> null
+                  - insecure_kubelet_readonly_port_enabled      = "FALSE" -> null
+                  - max_parallel_image_pulls                    = 2 -> null
+                  - pod_pids_limit                              = 0 -> null
+                  - shutdown_grace_period_critical_pods_seconds = 0 -> null
+                  - shutdown_grace_period_seconds               = 0 -> null
+                  - single_process_oom_kill                     = false -> null
+                    # (5 unchanged attributes hidden)
+                }
+
+              - node_image_config {
+                  - image         = "gke-1364-gke1391002-cos-129-19506-448-8-c-pre" -> null
+                  - image_project = "gke-node-images" -> null
+                }
+
+              - shielded_instance_config {
+                  - enable_integrity_monitoring = true -> null
+                  - enable_secure_boot          = false -> null
+                }
+
+              - windows_node_config {
+                    # (1 unchanged attribute hidden)
+                }
+
+              - workload_metadata_config {
+                  - mode = "GKE_METADATA" -> null
+                }
+            }
+
+          - upgrade_settings {
+              - max_surge       = 1 -> null
+              - max_unavailable = 0 -> null
+              - strategy        = "SURGE" -> null
+            }
+        }
+
+      ~ node_pool_auto_config (known after apply)
+      - node_pool_auto_config {
+          - resource_manager_tags = {} -> null
+
+          - node_kubelet_config {
+              - insecure_kubelet_readonly_port_enabled = "FALSE" -> null
+            }
+        }
+
+      ~ node_pool_defaults (known after apply)
+      - node_pool_defaults {
+          - node_config_defaults {
+              - insecure_kubelet_readonly_port_enabled = "FALSE" -> null
+              - logging_variant                        = "DEFAULT" -> null
+            }
+        }
+
+      ~ notification_config (known after apply)
+      - notification_config {
+          - pubsub {
+              - enabled = false -> null
+                # (1 unchanged attribute hidden)
+            }
+        }
+
+      ~ pod_autoscaling (known after apply)
+      - pod_autoscaling {
+          - hpa_profile = "PERFORMANCE" -> null
+        }
+
+      - private_cluster_config {
+          - enable_private_endpoint     = false -> null
+          - enable_private_nodes        = false -> null
+            # (5 unchanged attributes hidden)
+
+          - master_global_access_config {
+              - enabled = false -> null
+            }
+        }
+
+      ~ rbac_binding_config (known after apply)
+      - rbac_binding_config {
+          - enable_insecure_binding_system_authenticated   = true -> null
+          - enable_insecure_binding_system_unauthenticated = true -> null
+        }
+
+      - secret_manager_config {
+          - enabled = false -> null
+        }
+
+      - secret_sync_config {
+          - enabled = false -> null
+        }
+
+      ~ security_posture_config (known after apply)
+      - security_posture_config {
+          - mode               = "BASIC" -> null
+          - vulnerability_mode = "VULNERABILITY_MODE_UNSPECIFIED" -> null
+        }
+
+      ~ service_external_ips_config (known after apply)
+      - service_external_ips_config {
+          - enabled = false -> null
+        }
+
+      ~ vertical_pod_autoscaling (known after apply)
+
+        # (3 unchanged blocks hidden)
+    }
+
+  # module.gke.google_container_node_pool.this will be created
+  + resource "google_container_node_pool" "this" {
+      + cluster                     = "portfolio-gke"
+      + deletion_policy             = "DELETE"
+      + id                          = (known after apply)
+      + initial_node_count          = (known after apply)
+      + instance_group_urls         = (known after apply)
+      + location                    = "us-central1-c"
+      + managed_instance_group_urls = (known after apply)
+      + max_pods_per_node           = (known after apply)
+      + name                        = "portfolio-gke-pool"
+      + name_prefix                 = (known after apply)
+      + node_count                  = 1
+      + node_locations              = (known after apply)
+      + operation                   = (known after apply)
+      + project                     = "portfolio-platform-9ba0"
+      + version                     = (known after apply)
+
+      + management {
+          + auto_repair  = true
+          + auto_upgrade = true
+        }
+
+      + network_config (known after apply)
+
+      + node_config {
+          + disk_size_gb       = 30
+          + disk_type          = "pd-balanced"
+          + effective_taints   = (known after apply)
+          + gpudirect_strategy = (known after apply)
+          + image_type         = "COS_CONTAINERD"
+          + labels             = {
+              + "cluster" = "portfolio-gke"
+            }
+          + local_ssd_count    = (known after apply)
+          + logging_variant    = (known after apply)
+          + machine_type       = "e2-standard-2"
+          + metadata           = {
+              + "disable-legacy-endpoints" = "true"
+            }
+          + min_cpu_platform   = (known after apply)
+          + oauth_scopes       = [
+              + "https://www.googleapis.com/auth/cloud-platform",
+            ]
+          + preemptible        = false
+          + service_account    = "portfolio-gke-nodes@portfolio-platform-9ba0.iam.gserviceaccount.com"
+          + spot               = false
+
+          + boot_disk (known after apply)
+
+          + confidential_nodes (known after apply)
+
+          + containerd_config (known after apply)
+
+          + gcfs_config (known after apply)
+
+          + guest_accelerator (known after apply)
+
+          + kubelet_config (known after apply)
+
+          + linux_node_config (known after apply)
+
+          + node_image_config (known after apply)
+
+          + shielded_instance_config {
+              + enable_integrity_monitoring = true
+              + enable_secure_boot          = true
+            }
+
+          + windows_node_config (known after apply)
+
+          + workload_metadata_config {
+              + mode = "GKE_METADATA"
+            }
+        }
+
+      + node_drain_config (known after apply)
+
+      + upgrade_settings {
+          + max_surge       = 1
+          + max_unavailable = 0
+          + strategy        = "SURGE"
+
+          + blue_green_settings (known after apply)
+        }
+    }
+
+Plan: 2 to add, 0 to change, 1 to destroy.
+
+Changes to Outputs:
+  ~ zone               = "us-central1-a" -> "us-central1-c"
+module.gke.google_container_cluster.this: Destroying... [id=projects/portfolio-platform-9ba0/locations/us-central1-a/clusters/portfolio-gke]
+module.gke.google_container_cluster.this: Still destroying... [id=projects/portfolio-platform-9ba0/locations/us-central1-a/clusters/portfolio-gke, 00m10s elapsed]
+module.gke.google_container_cluster.this: Still destroying... [id=projects/portfolio-platform-9ba0/locations/us-central1-a/clusters/portfolio-gke, 00m20s elapsed]
+module.gke.google_container_cluster.this: Still destroying... [id=projects/portfolio-platform-9ba0/locations/us-central1-a/clusters/portfolio-gke, 00m30s elapsed]
+module.gke.google_container_cluster.this: Still destroying... [id=projects/portfolio-platform-9ba0/locations/us-central1-a/clusters/portfolio-gke, 00m40s elapsed]
+module.gke.google_container_cluster.this: Still destroying... [id=projects/portfolio-platform-9ba0/locations/us-central1-a/clusters/portfolio-gke, 00m50s elapsed]
+module.gke.google_container_cluster.this: Still destroying... [id=projects/portfolio-platform-9ba0/locations/us-central1-a/clusters/portfolio-gke, 01m00s elapsed]
+module.gke.google_container_cluster.this: Still destroying... [id=projects/portfolio-platform-9ba0/locations/us-central1-a/clusters/portfolio-gke, 01m10s elapsed]
+module.gke.google_container_cluster.this: Destruction complete after 1m13s
+module.gke.google_container_cluster.this: Creating...
+module.gke.google_container_cluster.this: Still creating... [00m10s elapsed]
+module.gke.google_container_cluster.this: Still creating... [00m20s elapsed]
+module.gke.google_container_cluster.this: Still creating... [00m30s elapsed]
+module.gke.google_container_cluster.this: Still creating... [00m40s elapsed]
+module.gke.google_container_cluster.this: Still creating... [00m50s elapsed]
+module.gke.google_container_cluster.this: Still creating... [01m00s elapsed]
+module.gke.google_container_cluster.this: Still creating... [01m10s elapsed]
+module.gke.google_container_cluster.this: Still creating... [01m20s elapsed]
+module.gke.google_container_cluster.this: Still creating... [01m30s elapsed]
+module.gke.google_container_cluster.this: Still creating... [01m40s elapsed]
+module.gke.google_container_cluster.this: Still creating... [01m50s elapsed]
+module.gke.google_container_cluster.this: Still creating... [02m00s elapsed]
+module.gke.google_container_cluster.this: Still creating... [02m10s elapsed]
+module.gke.google_container_cluster.this: Still creating... [02m20s elapsed]
+module.gke.google_container_cluster.this: Still creating... [02m30s elapsed]
+module.gke.google_container_cluster.this: Still creating... [02m40s elapsed]
+module.gke.google_container_cluster.this: Still creating... [02m50s elapsed]
+module.gke.google_container_cluster.this: Still creating... [03m00s elapsed]
+module.gke.google_container_cluster.this: Still creating... [03m10s elapsed]
+module.gke.google_container_cluster.this: Still creating... [03m20s elapsed]
+module.gke.google_container_cluster.this: Still creating... [03m30s elapsed]
+module.gke.google_container_cluster.this: Still creating... [03m40s elapsed]
+module.gke.google_container_cluster.this: Still creating... [03m50s elapsed]
+module.gke.google_container_cluster.this: Still creating... [04m00s elapsed]
+module.gke.google_container_cluster.this: Still creating... [04m10s elapsed]
+module.gke.google_container_cluster.this: Still creating... [04m20s elapsed]
+module.gke.google_container_cluster.this: Still creating... [04m30s elapsed]
+module.gke.google_container_cluster.this: Still creating... [04m40s elapsed]
+module.gke.google_container_cluster.this: Still creating... [04m50s elapsed]
+module.gke.google_container_cluster.this: Still creating... [05m00s elapsed]
+module.gke.google_container_cluster.this: Still creating... [05m10s elapsed]
+module.gke.google_container_cluster.this: Still creating... [05m20s elapsed]
+module.gke.google_container_cluster.this: Still creating... [05m30s elapsed]
+module.gke.google_container_cluster.this: Still creating... [05m40s elapsed]
+module.gke.google_container_cluster.this: Still creating... [05m50s elapsed]
+module.gke.google_container_cluster.this: Still creating... [06m00s elapsed]
+module.gke.google_container_cluster.this: Still creating... [06m10s elapsed]
+module.gke.google_container_cluster.this: Still creating... [06m20s elapsed]
+module.gke.google_container_cluster.this: Still creating... [06m30s elapsed]
+module.gke.google_container_cluster.this: Still creating... [06m40s elapsed]
+module.gke.google_container_cluster.this: Still creating... [06m50s elapsed]
+module.gke.google_container_cluster.this: Still creating... [07m00s elapsed]
+module.gke.google_container_cluster.this: Still creating... [07m10s elapsed]
+module.gke.google_container_cluster.this: Still creating... [07m20s elapsed]
+module.gke.google_container_cluster.this: Still creating... [07m30s elapsed]
+module.gke.google_container_cluster.this: Still creating... [07m40s elapsed]
+module.gke.google_container_cluster.this: Still creating... [07m50s elapsed]
+module.gke.google_container_cluster.this: Still creating... [08m00s elapsed]
+module.gke.google_container_cluster.this: Still creating... [08m10s elapsed]
+module.gke.google_container_cluster.this: Still creating... [08m20s elapsed]
+module.gke.google_container_cluster.this: Still creating... [08m30s elapsed]
+module.gke.google_container_cluster.this: Still creating... [08m40s elapsed]
+module.gke.google_container_cluster.this: Still creating... [08m50s elapsed]
+module.gke.google_container_cluster.this: Still creating... [09m00s elapsed]
+module.gke.google_container_cluster.this: Still creating... [09m10s elapsed]
+module.gke.google_container_cluster.this: Still creating... [09m20s elapsed]
+module.gke.google_container_cluster.this: Still creating... [09m30s elapsed]
+module.gke.google_container_cluster.this: Still creating... [09m40s elapsed]
+module.gke.google_container_cluster.this: Still creating... [09m50s elapsed]
+module.gke.google_container_cluster.this: Still creating... [10m00s elapsed]
+module.gke.google_container_cluster.this: Still creating... [10m10s elapsed]
+module.gke.google_container_cluster.this: Still creating... [10m20s elapsed]
+module.gke.google_container_cluster.this: Still creating... [10m30s elapsed]
+module.gke.google_container_cluster.this: Creation complete after 10m34s [id=projects/portfolio-platform-9ba0/locations/us-central1-c/clusters/portfolio-gke]
+module.gke.google_container_node_pool.this: Creating...
+module.gke.google_container_node_pool.this: Still creating... [00m10s elapsed]
+module.gke.google_container_node_pool.this: Still creating... [00m20s elapsed]
+module.gke.google_container_node_pool.this: Still creating... [00m30s elapsed]
+module.gke.google_container_node_pool.this: Still creating... [00m40s elapsed]
+module.gke.google_container_node_pool.this: Still creating... [00m50s elapsed]
+module.gke.google_container_node_pool.this: Still creating... [01m00s elapsed]
+module.gke.google_container_node_pool.this: Still creating... [01m10s elapsed]
+module.gke.google_container_node_pool.this: Still creating... [01m20s elapsed]
+module.gke.google_container_node_pool.this: Still creating... [01m30s elapsed]
+module.gke.google_container_node_pool.this: Creation complete after 1m35s [id=projects/portfolio-platform-9ba0/locations/us-central1-c/clusters/portfolio-gke/nodePools/portfolio-gke-pool]
+
+Apply complete! Resources: 2 added, 0 changed, 1 destroyed.
+
+Outputs:
+
+app_hosts = {
+  "dev" = "dev.136.71.241.0.nip.io"
+  "prod" = "app.136.71.241.0.nip.io"
+  "qa" = "qa.136.71.241.0.nip.io"
+}
+cluster_name = "portfolio-gke"
+deployer_sa_emails = {
+  "dev" = "deployer-dev@portfolio-platform-9ba0.iam.gserviceaccount.com"
+  "prod" = "deployer-prod@portfolio-platform-9ba0.iam.gserviceaccount.com"
+  "qa" = "deployer-qa@portfolio-platform-9ba0.iam.gserviceaccount.com"
+}
+environments = tolist([
+  "dev",
+  "prod",
+  "qa",
+])
+ingress_ip = "136.71.241.0"
+project_id = "portfolio-platform-9ba0"
+region = "us-central1"
+wif_provider = "projects/172214868856/locations/global/workloadIdentityPools/github/providers/github-oidc"
+zone = "us-central1-c"

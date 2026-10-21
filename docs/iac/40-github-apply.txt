@@ -1,0 +1,492 @@
+data.terraform_remote_state.platform: Reading...
+data.github_user.prod_reviewer: Reading...
+data.terraform_remote_state.platform: Read complete after 0s
+data.github_user.prod_reviewer: Read complete after 1s [id=343726521]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # github_actions_environment_secret.django_secret_key["dev"] will be created
+  + resource "github_actions_environment_secret" "django_secret_key" {
+      + created_at        = (known after apply)
+      + environment       = "dev"
+      + id                = (known after apply)
+      + key_id            = (known after apply)
+      + plaintext_value   = (sensitive value)
+      + remote_updated_at = (known after apply)
+      + repository        = "Devsu-technical-test"
+      + repository_id     = (known after apply)
+      + secret_name       = "DJANGO_SECRET_KEY"
+      + updated_at        = (known after apply)
+    }
+
+  # github_actions_environment_secret.django_secret_key["prod"] will be created
+  + resource "github_actions_environment_secret" "django_secret_key" {
+      + created_at        = (known after apply)
+      + environment       = "prod"
+      + id                = (known after apply)
+      + key_id            = (known after apply)
+      + plaintext_value   = (sensitive value)
+      + remote_updated_at = (known after apply)
+      + repository        = "Devsu-technical-test"
+      + repository_id     = (known after apply)
+      + secret_name       = "DJANGO_SECRET_KEY"
+      + updated_at        = (known after apply)
+    }
+
+  # github_actions_environment_secret.django_secret_key["qa"] will be created
+  + resource "github_actions_environment_secret" "django_secret_key" {
+      + created_at        = (known after apply)
+      + environment       = "qa"
+      + id                = (known after apply)
+      + key_id            = (known after apply)
+      + plaintext_value   = (sensitive value)
+      + remote_updated_at = (known after apply)
+      + repository        = "Devsu-technical-test"
+      + repository_id     = (known after apply)
+      + secret_name       = "DJANGO_SECRET_KEY"
+      + updated_at        = (known after apply)
+    }
+
+  # github_actions_environment_variable.app_host["dev"] will be created
+  + resource "github_actions_environment_variable" "app_host" {
+      + created_at    = (known after apply)
+      + environment   = "dev"
+      + id            = (known after apply)
+      + repository    = "Devsu-technical-test"
+      + repository_id = (known after apply)
+      + updated_at    = (known after apply)
+      + value         = "dev.136.71.241.0.nip.io"
+      + variable_name = "APP_HOST"
+    }
+
+  # github_actions_environment_variable.app_host["prod"] will be created
+  + resource "github_actions_environment_variable" "app_host" {
+      + created_at    = (known after apply)
+      + environment   = "prod"
+      + id            = (known after apply)
+      + repository    = "Devsu-technical-test"
+      + repository_id = (known after apply)
+      + updated_at    = (known after apply)
+      + value         = "app.136.71.241.0.nip.io"
+      + variable_name = "APP_HOST"
+    }
+
+  # github_actions_environment_variable.app_host["qa"] will be created
+  + resource "github_actions_environment_variable" "app_host" {
+      + created_at    = (known after apply)
+      + environment   = "qa"
+      + id            = (known after apply)
+      + repository    = "Devsu-technical-test"
+      + repository_id = (known after apply)
+      + updated_at    = (known after apply)
+      + value         = "qa.136.71.241.0.nip.io"
+      + variable_name = "APP_HOST"
+    }
+
+  # github_actions_environment_variable.deployer_sa["dev"] will be created
+  + resource "github_actions_environment_variable" "deployer_sa" {
+      + created_at    = (known after apply)
+      + environment   = "dev"
+      + id            = (known after apply)
+      + repository    = "Devsu-technical-test"
+      + repository_id = (known after apply)
+      + updated_at    = (known after apply)
+      + value         = "deployer-dev@portfolio-platform-9ba0.iam.gserviceaccount.com"
+      + variable_name = "DEPLOYER_SA"
+    }
+
+  # github_actions_environment_variable.deployer_sa["prod"] will be created
+  + resource "github_actions_environment_variable" "deployer_sa" {
+      + created_at    = (known after apply)
+      + environment   = "prod"
+      + id            = (known after apply)
+      + repository    = "Devsu-technical-test"
+      + repository_id = (known after apply)
+      + updated_at    = (known after apply)
+      + value         = "deployer-prod@portfolio-platform-9ba0.iam.gserviceaccount.com"
+      + variable_name = "DEPLOYER_SA"
+    }
+
+  # github_actions_environment_variable.deployer_sa["qa"] will be created
+  + resource "github_actions_environment_variable" "deployer_sa" {
+      + created_at    = (known after apply)
+      + environment   = "qa"
+      + id            = (known after apply)
+      + repository    = "Devsu-technical-test"
+      + repository_id = (known after apply)
+      + updated_at    = (known after apply)
+      + value         = "deployer-qa@portfolio-platform-9ba0.iam.gserviceaccount.com"
+      + variable_name = "DEPLOYER_SA"
+    }
+
+  # github_actions_variable.repo["GCP_PROJECT_ID"] will be created
+  + resource "github_actions_variable" "repo" {
+      + created_at    = (known after apply)
+      + id            = (known after apply)
+      + repository    = "Devsu-technical-test"
+      + repository_id = (known after apply)
+      + updated_at    = (known after apply)
+      + value         = "portfolio-platform-9ba0"
+      + variable_name = "GCP_PROJECT_ID"
+    }
+
+  # github_actions_variable.repo["GKE_CLUSTER"] will be created
+  + resource "github_actions_variable" "repo" {
+      + created_at    = (known after apply)
+      + id            = (known after apply)
+      + repository    = "Devsu-technical-test"
+      + repository_id = (known after apply)
+      + updated_at    = (known after apply)
+      + value         = "portfolio-gke"
+      + variable_name = "GKE_CLUSTER"
+    }
+
+  # github_actions_variable.repo["GKE_LOCATION"] will be created
+  + resource "github_actions_variable" "repo" {
+      + created_at    = (known after apply)
+      + id            = (known after apply)
+      + repository    = "Devsu-technical-test"
+      + repository_id = (known after apply)
+      + updated_at    = (known after apply)
+      + value         = "us-central1-c"
+      + variable_name = "GKE_LOCATION"
+    }
+
+  # github_actions_variable.repo["PROD_URL"] will be created
+  + resource "github_actions_variable" "repo" {
+      + created_at    = (known after apply)
+      + id            = (known after apply)
+      + repository    = "Devsu-technical-test"
+      + repository_id = (known after apply)
+      + updated_at    = (known after apply)
+      + value         = "http://app.136.71.241.0.nip.io"
+      + variable_name = "PROD_URL"
+    }
+
+  # github_actions_variable.repo["WIF_PROVIDER"] will be created
+  + resource "github_actions_variable" "repo" {
+      + created_at    = (known after apply)
+      + id            = (known after apply)
+      + repository    = "Devsu-technical-test"
+      + repository_id = (known after apply)
+      + updated_at    = (known after apply)
+      + value         = "projects/172214868856/locations/global/workloadIdentityPools/github/providers/github-oidc"
+      + variable_name = "WIF_PROVIDER"
+    }
+
+  # github_repository_environment.this["dev"] will be created
+  + resource "github_repository_environment" "this" {
+      + can_admins_bypass   = true
+      + environment         = "dev"
+      + id                  = (known after apply)
+      + prevent_self_review = false
+      + repository          = "Devsu-technical-test"
+      + repository_id       = (known after apply)
+
+      + deployment_branch_policy {
+          + custom_branch_policies = true
+          + protected_branches     = false
+        }
+    }
+
+  # github_repository_environment.this["prod"] will be created
+  + resource "github_repository_environment" "this" {
+      + can_admins_bypass   = true
+      + environment         = "prod"
+      + id                  = (known after apply)
+      + prevent_self_review = false
+      + repository          = "Devsu-technical-test"
+      + repository_id       = (known after apply)
+
+      + deployment_branch_policy {
+          + custom_branch_policies = true
+          + protected_branches     = false
+        }
+
+      + reviewers {
+          + users = [
+              + 343726521,
+            ]
+        }
+    }
+
+  # github_repository_environment.this["qa"] will be created
+  + resource "github_repository_environment" "this" {
+      + can_admins_bypass   = true
+      + environment         = "qa"
+      + id                  = (known after apply)
+      + prevent_self_review = false
+      + repository          = "Devsu-technical-test"
+      + repository_id       = (known after apply)
+
+      + deployment_branch_policy {
+          + custom_branch_policies = true
+          + protected_branches     = false
+        }
+    }
+
+  # github_repository_environment_deployment_policy.this["dev"] will be created
+  + resource "github_repository_environment_deployment_policy" "this" {
+      + branch_pattern = "develop"
+      + environment    = "dev"
+      + id             = (known after apply)
+      + policy_id      = (known after apply)
+      + repository     = "Devsu-technical-test"
+      + repository_id  = (known after apply)
+    }
+
+  # github_repository_environment_deployment_policy.this["prod"] will be created
+  + resource "github_repository_environment_deployment_policy" "this" {
+      + branch_pattern = "main"
+      + environment    = "prod"
+      + id             = (known after apply)
+      + policy_id      = (known after apply)
+      + repository     = "Devsu-technical-test"
+      + repository_id  = (known after apply)
+    }
+
+  # github_repository_environment_deployment_policy.this["qa"] will be created
+  + resource "github_repository_environment_deployment_policy" "this" {
+      + branch_pattern = "qa"
+      + environment    = "qa"
+      + id             = (known after apply)
+      + policy_id      = (known after apply)
+      + repository     = "Devsu-technical-test"
+      + repository_id  = (known after apply)
+    }
+
+  # github_repository_ruleset.protected_branches will be created
+  + resource "github_repository_ruleset" "protected_branches" {
+      + enforcement = "active"
+      + etag        = (known after apply)
+      + id          = (known after apply)
+      + name        = "protected-branches"
+      + node_id     = (known after apply)
+      + repository  = "Devsu-technical-test"
+      + ruleset_id  = (known after apply)
+      + target      = "branch"
+
+      + conditions {
+          + ref_name {
+              + exclude = []
+              + include = [
+                  + "refs/heads/develop",
+                  + "refs/heads/main",
+                  + "refs/heads/qa",
+                ]
+            }
+        }
+
+      + rules {
+          + deletion                      = true
+          + non_fast_forward              = true
+          + update_allows_fetch_and_merge = false
+
+          + pull_request {
+              + allowed_merge_methods             = (known after apply)
+              + dismiss_stale_reviews_on_push     = false
+              + require_code_owner_review         = false
+              + require_last_push_approval        = false
+              + required_approving_review_count   = 0
+              + required_review_thread_resolution = false
+            }
+
+          + required_status_checks {
+              + do_not_enforce_on_create = false
+
+              + required_check {
+                  + context        = "app / lint"
+                  + integration_id = 0
+                }
+              + required_check {
+                  + context        = "app / test"
+                  + integration_id = 0
+                }
+              + required_check {
+                  + context        = "chart / validate"
+                  + integration_id = 0
+                }
+              + required_check {
+                  + context        = "iac / validate"
+                  + integration_id = 0
+                }
+              + required_check {
+                  + context        = "image / build"
+                  + integration_id = 0
+                }
+              + required_check {
+                  + context        = "integration / kind"
+                  + integration_id = 0
+                }
+            }
+        }
+    }
+
+  # random_password.django_secret_key["dev"] will be created
+  + resource "random_password" "django_secret_key" {
+      + bcrypt_hash = (sensitive value)
+      + id          = (known after apply)
+      + length      = 64
+      + lower       = true
+      + min_lower   = 0
+      + min_numeric = 0
+      + min_special = 0
+      + min_upper   = 0
+      + number      = true
+      + numeric     = true
+      + result      = (sensitive value)
+      + special     = false
+      + upper       = true
+    }
+
+  # random_password.django_secret_key["prod"] will be created
+  + resource "random_password" "django_secret_key" {
+      + bcrypt_hash = (sensitive value)
+      + id          = (known after apply)
+      + length      = 64
+      + lower       = true
+      + min_lower   = 0
+      + min_numeric = 0
+      + min_special = 0
+      + min_upper   = 0
+      + number      = true
+      + numeric     = true
+      + result      = (sensitive value)
+      + special     = false
+      + upper       = true
+    }
+
+  # random_password.django_secret_key["qa"] will be created
+  + resource "random_password" "django_secret_key" {
+      + bcrypt_hash = (sensitive value)
+      + id          = (known after apply)
+      + length      = 64
+      + lower       = true
+      + min_lower   = 0
+      + min_numeric = 0
+      + min_special = 0
+      + min_upper   = 0
+      + number      = true
+      + numeric     = true
+      + result      = (sensitive value)
+      + special     = false
+      + upper       = true
+    }
+
+Plan: 24 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + environments         = [
+      + "dev",
+      + "prod",
+      + "qa",
+    ]
+  + repository_variables = {
+      + GCP_PROJECT_ID = "portfolio-platform-9ba0"
+      + GKE_CLUSTER    = "portfolio-gke"
+      + GKE_LOCATION   = "us-central1-c"
+      + PROD_URL       = "http://app.136.71.241.0.nip.io"
+      + WIF_PROVIDER   = "projects/172214868856/locations/global/workloadIdentityPools/github/providers/github-oidc"
+    }
+random_password.django_secret_key["qa"]: Creating...
+random_password.django_secret_key["dev"]: Creating...
+random_password.django_secret_key["prod"]: Creating...
+random_password.django_secret_key["dev"]: Creation complete after 0s [id=none]
+random_password.django_secret_key["qa"]: Creation complete after 0s [id=none]
+random_password.django_secret_key["prod"]: Creation complete after 0s [id=none]
+github_actions_variable.repo["PROD_URL"]: Creating...
+github_actions_variable.repo["WIF_PROVIDER"]: Creating...
+github_actions_variable.repo["GKE_LOCATION"]: Creating...
+github_actions_variable.repo["GKE_CLUSTER"]: Creating...
+github_actions_variable.repo["GCP_PROJECT_ID"]: Creating...
+github_repository_environment.this["dev"]: Creating...
+github_repository_environment.this["qa"]: Creating...
+github_repository_environment.this["prod"]: Creating...
+github_repository_ruleset.protected_branches: Creating...
+github_actions_variable.repo["PROD_URL"]: Still creating... [00m10s elapsed]
+github_actions_variable.repo["GCP_PROJECT_ID"]: Still creating... [00m10s elapsed]
+github_actions_variable.repo["GKE_LOCATION"]: Still creating... [00m10s elapsed]
+github_actions_variable.repo["GKE_CLUSTER"]: Still creating... [00m10s elapsed]
+github_actions_variable.repo["WIF_PROVIDER"]: Still creating... [00m10s elapsed]
+github_repository_environment.this["dev"]: Still creating... [00m10s elapsed]
+github_repository_environment.this["qa"]: Still creating... [00m10s elapsed]
+github_repository_environment.this["prod"]: Still creating... [00m10s elapsed]
+github_repository_ruleset.protected_branches: Still creating... [00m10s elapsed]
+github_repository_environment.this["dev"]: Creation complete after 12s [id=Devsu-technical-test:dev]
+github_repository_environment.this["qa"]: Creation complete after 12s [id=Devsu-technical-test:qa]
+github_repository_environment.this["prod"]: Creation complete after 12s [id=Devsu-technical-test:prod]
+github_repository_environment_deployment_policy.this["prod"]: Creating...
+github_actions_environment_variable.app_host["qa"]: Creating...
+github_repository_environment_deployment_policy.this["qa"]: Creating...
+github_actions_environment_secret.django_secret_key["qa"]: Creating...
+github_repository_ruleset.protected_branches: Creation complete after 13s [id=25592934]
+github_actions_environment_secret.django_secret_key["prod"]: Creating...
+github_actions_variable.repo["GCP_PROJECT_ID"]: Creation complete after 14s [id=Devsu-technical-test:GCP_PROJECT_ID]
+github_actions_environment_secret.django_secret_key["dev"]: Creating...
+github_actions_variable.repo["WIF_PROVIDER"]: Creation complete after 14s [id=Devsu-technical-test:WIF_PROVIDER]
+github_actions_environment_variable.app_host["dev"]: Creating...
+github_actions_variable.repo["PROD_URL"]: Creation complete after 14s [id=Devsu-technical-test:PROD_URL]
+github_actions_environment_variable.app_host["prod"]: Creating...
+github_actions_variable.repo["GKE_CLUSTER"]: Creation complete after 14s [id=Devsu-technical-test:GKE_CLUSTER]
+github_actions_environment_variable.deployer_sa["prod"]: Creating...
+github_actions_variable.repo["GKE_LOCATION"]: Creation complete after 18s [id=Devsu-technical-test:GKE_LOCATION]
+github_actions_environment_variable.deployer_sa["dev"]: Creating...
+github_repository_environment_deployment_policy.this["prod"]: Still creating... [00m10s elapsed]
+github_actions_environment_variable.app_host["qa"]: Still creating... [00m10s elapsed]
+github_repository_environment_deployment_policy.this["qa"]: Still creating... [00m10s elapsed]
+github_actions_environment_secret.django_secret_key["qa"]: Still creating... [00m10s elapsed]
+github_actions_environment_secret.django_secret_key["prod"]: Still creating... [00m10s elapsed]
+github_repository_environment_deployment_policy.this["prod"]: Creation complete after 11s [id=Devsu-technical-test:prod:63890251]
+github_repository_environment_deployment_policy.this["dev"]: Creating...
+github_repository_environment_deployment_policy.this["qa"]: Creation complete after 11s [id=Devsu-technical-test:qa:63890253]
+github_actions_environment_variable.deployer_sa["qa"]: Creating...
+github_actions_environment_secret.django_secret_key["dev"]: Still creating... [00m10s elapsed]
+github_actions_environment_variable.app_host["dev"]: Still creating... [00m10s elapsed]
+github_actions_environment_variable.app_host["prod"]: Still creating... [00m10s elapsed]
+github_actions_environment_variable.deployer_sa["prod"]: Still creating... [00m10s elapsed]
+github_actions_environment_variable.deployer_sa["dev"]: Still creating... [00m10s elapsed]
+github_actions_environment_variable.app_host["qa"]: Creation complete after 18s [id=Devsu-technical-test:qa:APP_HOST]
+github_actions_environment_secret.django_secret_key["qa"]: Still creating... [00m20s elapsed]
+github_actions_environment_secret.django_secret_key["prod"]: Still creating... [00m20s elapsed]
+github_repository_environment_deployment_policy.this["dev"]: Creation complete after 10s [id=Devsu-technical-test:dev:63890274]
+github_actions_environment_variable.app_host["dev"]: Creation complete after 19s [id=Devsu-technical-test:dev:APP_HOST]
+github_actions_environment_variable.app_host["prod"]: Creation complete after 19s [id=Devsu-technical-test:prod:APP_HOST]
+github_actions_environment_variable.deployer_sa["qa"]: Still creating... [00m10s elapsed]
+github_actions_environment_variable.deployer_sa["prod"]: Creation complete after 19s [id=Devsu-technical-test:prod:DEPLOYER_SA]
+github_actions_environment_secret.django_secret_key["dev"]: Still creating... [00m20s elapsed]
+github_actions_environment_secret.django_secret_key["qa"]: Creation complete after 22s [id=Devsu-technical-test:qa:DJANGO_SECRET_KEY]
+github_actions_environment_variable.deployer_sa["dev"]: Creation complete after 16s [id=Devsu-technical-test:dev:DEPLOYER_SA]
+github_actions_environment_secret.django_secret_key["prod"]: Creation complete after 21s [id=Devsu-technical-test:prod:DJANGO_SECRET_KEY]
+github_actions_environment_secret.django_secret_key["dev"]: Creation complete after 20s [id=Devsu-technical-test:dev:DJANGO_SECRET_KEY]
+github_actions_environment_variable.deployer_sa["qa"]: Creation complete after 12s [id=Devsu-technical-test:qa:DEPLOYER_SA]
+
+Warning: Argument is deprecated
+
+  with github_actions_environment_secret.django_secret_key["qa"],
+  on repository.tf line 50, in resource "github_actions_environment_secret" "django_secret_key":
+  50:   plaintext_value = random_password.django_secret_key[each.key].result
+
+Use value.
+
+(and 2 more similar warnings elsewhere)
+
+Apply complete! Resources: 24 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+environments = tolist([
+  "dev",
+  "prod",
+  "qa",
+])
+repository_variables = {
+  "GCP_PROJECT_ID" = "portfolio-platform-9ba0"
+  "GKE_CLUSTER" = "portfolio-gke"
+  "GKE_LOCATION" = "us-central1-c"
+  "PROD_URL" = "http://app.136.71.241.0.nip.io"
+  "WIF_PROVIDER" = "projects/172214868856/locations/global/workloadIdentityPools/github/providers/github-oidc"
+}

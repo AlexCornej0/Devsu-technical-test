@@ -1,0 +1,214 @@
+google_project.seed: Preparing import... [id=bspm-portfolio-devops]
+google_project.seed: Refreshing state... [id=projects/bspm-portfolio-devops]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+  ~ update in-place
+
+Terraform will perform the following actions:
+
+  # google_organization_iam_member.admin["roles/orgpolicy.policyAdmin"] will be created
+  + resource "google_organization_iam_member" "admin" {
+      + etag   = (known after apply)
+      + id     = (known after apply)
+      + member = "user:user:example-user@example.com"
+      + org_id = "ORG_ID"
+      + role   = "roles/orgpolicy.policyAdmin"
+    }
+
+  # google_organization_iam_member.admin["roles/resourcemanager.folderAdmin"] will be created
+  + resource "google_organization_iam_member" "admin" {
+      + etag   = (known after apply)
+      + id     = (known after apply)
+      + member = "user:user:example-user@example.com"
+      + org_id = "ORG_ID"
+      + role   = "roles/resourcemanager.folderAdmin"
+    }
+
+  # google_organization_iam_member.admin["roles/resourcemanager.projectCreator"] will be created
+  + resource "google_organization_iam_member" "admin" {
+      + etag   = (known after apply)
+      + id     = (known after apply)
+      + member = "user:user:example-user@example.com"
+      + org_id = "ORG_ID"
+      + role   = "roles/resourcemanager.projectCreator"
+    }
+
+  # google_project.seed will be updated in-place
+  # (imported from "bspm-portfolio-devops")
+  ~ resource "google_project" "seed" {
+        auto_create_network = true
+        billing_account     = "BILLING_ID"
+        deletion_policy     = "PREVENT"
+      ~ effective_labels    = {
+          + "managed-by" = "terraform"
+          + "role"       = "seed"
+        }
+        folder_id           = null
+        id                  = "projects/bspm-portfolio-devops"
+      ~ labels              = {
+          + "managed-by" = "terraform"
+          + "role"       = "seed"
+        }
+        name                = "portfolio-seed"
+        number              = "SEED_NUM"
+        org_id              = "ORG_ID"
+        project_id          = "bspm-portfolio-devops"
+      ~ terraform_labels    = {
+          + "managed-by" = "terraform"
+          + "role"       = "seed"
+        }
+    }
+
+  # google_project_service.seed["billingbudgets.googleapis.com"] will be created
+  + resource "google_project_service" "seed" {
+      + deletion_policy    = "DELETE"
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = "bspm-portfolio-devops"
+      + service            = "billingbudgets.googleapis.com"
+    }
+
+  # google_project_service.seed["cloudbilling.googleapis.com"] will be created
+  + resource "google_project_service" "seed" {
+      + deletion_policy    = "DELETE"
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = "bspm-portfolio-devops"
+      + service            = "cloudbilling.googleapis.com"
+    }
+
+  # google_project_service.seed["cloudresourcemanager.googleapis.com"] will be created
+  + resource "google_project_service" "seed" {
+      + deletion_policy    = "DELETE"
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = "bspm-portfolio-devops"
+      + service            = "cloudresourcemanager.googleapis.com"
+    }
+
+  # google_project_service.seed["iam.googleapis.com"] will be created
+  + resource "google_project_service" "seed" {
+      + deletion_policy    = "DELETE"
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = "bspm-portfolio-devops"
+      + service            = "iam.googleapis.com"
+    }
+
+  # google_project_service.seed["orgpolicy.googleapis.com"] will be created
+  + resource "google_project_service" "seed" {
+      + deletion_policy    = "DELETE"
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = "bspm-portfolio-devops"
+      + service            = "orgpolicy.googleapis.com"
+    }
+
+  # google_project_service.seed["serviceusage.googleapis.com"] will be created
+  + resource "google_project_service" "seed" {
+      + deletion_policy    = "DELETE"
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = "bspm-portfolio-devops"
+      + service            = "serviceusage.googleapis.com"
+    }
+
+  # google_project_service.seed["storage.googleapis.com"] will be created
+  + resource "google_project_service" "seed" {
+      + deletion_policy    = "DELETE"
+      + disable_on_destroy = false
+      + id                 = (known after apply)
+      + project            = "bspm-portfolio-devops"
+      + service            = "storage.googleapis.com"
+    }
+
+  # google_storage_bucket.tfstate will be created
+  + resource "google_storage_bucket" "tfstate" {
+      + deletion_policy             = "DELETE"
+      + effective_labels            = {
+          + "goog-terraform-provisioned" = "true"
+        }
+      + force_destroy               = false
+      + id                          = (known after apply)
+      + location                    = "US-CENTRAL1"
+      + name                        = "bspm-portfolio-devops-tfstate"
+      + project                     = "bspm-portfolio-devops"
+      + project_number              = (known after apply)
+      + public_access_prevention    = "enforced"
+      + rpo                         = (known after apply)
+      + self_link                   = (known after apply)
+      + storage_class               = "STANDARD"
+      + terraform_labels            = {
+          + "goog-terraform-provisioned" = "true"
+        }
+      + time_created                = (known after apply)
+      + uniform_bucket_level_access = true
+      + updated                     = (known after apply)
+      + url                         = (known after apply)
+
+      + lifecycle_rule {
+          + action {
+              + type          = "Delete"
+                # (1 unchanged attribute hidden)
+            }
+          + condition {
+              + matches_prefix         = []
+              + matches_storage_class  = []
+              + matches_suffix         = []
+              + num_newer_versions     = 10
+              + with_state             = "ARCHIVED"
+                # (3 unchanged attributes hidden)
+            }
+        }
+
+      + soft_delete_policy (known after apply)
+
+      + versioning {
+          + enabled = true
+        }
+
+      + website (known after apply)
+    }
+
+Plan: 1 to import, 11 to add, 1 to change, 0 to destroy.
+
+Changes to Outputs:
+  + seed_project_id = "bspm-portfolio-devops"
+  + state_bucket    = "bspm-portfolio-devops-tfstate"
+google_project.seed: Importing... [id=bspm-portfolio-devops]
+google_project.seed: Import complete [id=bspm-portfolio-devops]
+google_project.seed: Modifying... [id=projects/bspm-portfolio-devops]
+google_project.seed: Modifications complete after 2s [id=projects/bspm-portfolio-devops]
+google_project_service.seed["orgpolicy.googleapis.com"]: Creating...
+google_project_service.seed["cloudbilling.googleapis.com"]: Creating...
+google_project_service.seed["cloudresourcemanager.googleapis.com"]: Creating...
+google_project_service.seed["iam.googleapis.com"]: Creating...
+google_project_service.seed["storage.googleapis.com"]: Creating...
+google_project_service.seed["billingbudgets.googleapis.com"]: Creating...
+google_project_service.seed["serviceusage.googleapis.com"]: Creating...
+google_project_service.seed["iam.googleapis.com"]: Creation complete after 4s [id=bspm-portfolio-devops/iam.googleapis.com]
+google_project_service.seed["cloudresourcemanager.googleapis.com"]: Creation complete after 4s [id=bspm-portfolio-devops/cloudresourcemanager.googleapis.com]
+google_project_service.seed["serviceusage.googleapis.com"]: Creation complete after 4s [id=bspm-portfolio-devops/serviceusage.googleapis.com]
+google_project_service.seed["cloudbilling.googleapis.com"]: Creation complete after 4s [id=bspm-portfolio-devops/cloudbilling.googleapis.com]
+google_project_service.seed["orgpolicy.googleapis.com"]: Creation complete after 4s [id=bspm-portfolio-devops/orgpolicy.googleapis.com]
+google_project_service.seed["storage.googleapis.com"]: Creation complete after 4s [id=bspm-portfolio-devops/storage.googleapis.com]
+google_project_service.seed["billingbudgets.googleapis.com"]: Creation complete after 4s [id=bspm-portfolio-devops/billingbudgets.googleapis.com]
+google_organization_iam_member.admin["roles/resourcemanager.folderAdmin"]: Creating...
+google_organization_iam_member.admin["roles/orgpolicy.policyAdmin"]: Creating...
+google_organization_iam_member.admin["roles/resourcemanager.projectCreator"]: Creating...
+google_storage_bucket.tfstate: Creating...
+google_organization_iam_member.admin["roles/orgpolicy.policyAdmin"]: Still creating... [00m10s elapsed]
+google_organization_iam_member.admin["roles/resourcemanager.folderAdmin"]: Still creating... [00m10s elapsed]
+google_organization_iam_member.admin["roles/resourcemanager.projectCreator"]: Still creating... [00m10s elapsed]
+google_organization_iam_member.admin["roles/resourcemanager.folderAdmin"]: Creation complete after 14s [id=ORG_ID/roles/resourcemanager.folderAdmin/user:user:example-user@example.com]
+google_organization_iam_member.admin["roles/resourcemanager.projectCreator"]: Creation complete after 14s [id=ORG_ID/roles/resourcemanager.projectCreator/user:user:example-user@example.com]
+google_organization_iam_member.admin["roles/orgpolicy.policyAdmin"]: Creation complete after 14s [id=ORG_ID/roles/orgpolicy.policyAdmin/user:user:example-user@example.com]
+
+Error: googleapi: Error 409: Your previous request to create the named bucket succeeded and you already own it., conflict
+
+  with google_storage_bucket.tfstate,
+  on main.tf line 37, in resource "google_storage_bucket" "tfstate":
+  37: resource "google_storage_bucket" "tfstate" {
+
