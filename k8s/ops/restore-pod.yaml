@@ -1,0 +1,41 @@
+# Temporary pod for the "Restore the database" runbook in README.md
+apiVersion: v1
+kind: Pod
+metadata:
+  name: restore
+  labels:
+    app.kubernetes.io/name: demo-chart
+    app.kubernetes.io/component: restore
+spec:
+  restartPolicy: Never
+  automountServiceAccountToken: false
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+    - name: restore
+      image: ghcr.io/alexcornej0/devsu-technical-test
+      command: ["sleep", "3600"]
+      resources:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+        limits:
+          cpu: 200m
+          memory: 128Mi
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop: ["ALL"]
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: demo-data

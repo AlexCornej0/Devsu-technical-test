@@ -1,0 +1,64 @@
+# Image: always deploy by digest in CI/CD; tag is only for local tests (kind/minikube)
+image:
+  repository: ghcr.io/alexcornej0/devsu-technical-test
+  digest: ""
+  tag: ""
+  pullPolicy: IfNotPresent
+
+# Non-secret configuration -> ConfigMap (and the migration Job env)
+config:
+  DJANGO_DEBUG: "False"
+  DATABASE_NAME: "/data/db.sqlite3"
+  DJANGO_LOG_LEVEL: "INFO"
+
+# Secret created outside the chart (pipeline or kubectl).
+secretName: demo-secrets
+
+# PVC created by the bootstrap chart
+persistence:
+  claimName: demo-data
+
+ingress:
+  className: traefik
+  host: dev.127.0.0.1.nip.io
+
+# Used only when autoscaling.enabled=false
+replicaCount: 2
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 75
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop: ["ALL"]
+
+migrations:
+  enabled: true
+
+# Extra pod annotations (the pipeline sets secret-hash here to restart pods on secret rotation)
+podAnnotations: {}
+
+networkPolicy:
+  enabled: false
+  ingressNamespace: traefik

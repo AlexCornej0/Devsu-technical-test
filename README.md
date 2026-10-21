@@ -59,6 +59,27 @@ flowchart LR
 image already exists it is reused, so promoting `develop → qa → main` deploys the exact bytes that were tested.
 Deployments always use the digest (`image@sha256:...`), never a tag.
 ## Kubernetes resources
+
+Two charts:
+
+- **`k8s/bootstrap`** - installed once per namespace and never by the pipeline: the `demo-data` PVC
+  (`ReadWriteOnce`, `helm.sh/resource-policy: keep`) and the `deployer` Role/RoleBinding. Data and permissions
+  outlive the app release.
+- **`k8s/demo-chart`** - the app. Every resource is named after the release (`demo`).
+
+| Template | Why it exists |
+| --- | --- |
+| `configmap.yaml` | Non-secret settings as environment variables; `DJANGO_ALLOWED_HOSTS` always includes `localhost` for the probes |
+| `migrate-job.yaml` | `pre-install,pre-upgrade` hook: SQLite online backup, then `migrate`. The rollout only starts if it succeeds |
+| `deployment.yaml` | Rolling update with `maxUnavailable: 0`; startup, liveness (`/health/live`) and readiness (`/health/ready`: DB + no pending migrations) probes; non-root, read-only root filesystem, no capabilities; `preStop` pause for graceful shutdown |
+| `service.yaml` | ClusterIP, selects only the web pods (`component: web`) |
+| `ingress.yaml` | Traefik, one host per environment (`<env>.<ip>.nip.io`) |
+| `hpa.yaml` | 2 to 3 replicas on CPU. Capped at 3: SQLite allows one writer at a time |
+| `pdb.yaml` | At least one pod during voluntary disruptions |
+| `networkpolicy.yaml` | Only Traefik and the same namespace can reach port 8000 (enabled on GKE) |
+| `tests/smoke-test.yaml` | `helm test`: readiness, then create, read and delete a user through the Service |
+
+The `DJANGO_SECRET_KEY` Secret is created by the pipeline from a GitHub Environment secret; it is never in the repository or in Helm values.
 ## Infrastructure as Code
 ## Security
 ## Evidence

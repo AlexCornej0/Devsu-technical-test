@@ -240,3 +240,6 @@ staticfiles/
 
 # Chart validation (CI)
 rendered/
+
+# Documents
+.docs/

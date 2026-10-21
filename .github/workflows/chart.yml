@@ -1,0 +1,44 @@
+name: chart
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+env:
+  HELM_VERSION: v4.3.1
+  KUBERNETES_VERSION: 1.35.0
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310
+        with:
+          version: ${{ env.HELM_VERSION }}
+      - name: Install kubeconform and Trivy
+        run: |
+          scripts/install-tool.sh kubeconform
+          scripts/install-tool.sh trivy
+      - name: Lint and render every environment
+        run: |
+          DIG="sha256:$(printf '0%.0s' {1..64})"
+          mkdir -p rendered
+          helm lint --strict k8s/bootstrap --set deployer=ci@example.com
+          helm template bootstrap k8s/bootstrap -n dev --set deployer=ci@example.com > rendered/bootstrap.yaml
+          for env in dev qa prod; do
+            helm lint --strict k8s/demo-chart -f "k8s/demo-chart/values-$env.yaml" --set image.digest="$DIG"
+            for hpa in true false; do
+              helm template demo k8s/demo-chart -n "$env" -f "k8s/demo-chart/values-$env.yaml" \
+                --set image.digest="$DIG" --set autoscaling.enabled="$hpa" --set networkPolicy.enabled=true \
+                > "rendered/demo-$env-hpa-$hpa.yaml"
+            done
+          done
+      - name: Schema validation (kubeconform)
+        run: kubeconform -strict -summary -kubernetes-version "$KUBERNETES_VERSION" rendered
+      - name: Misconfiguration scan (Trivy)
+        run: trivy config --exit-code 1 --severity CRITICAL,HIGH --ignorefile .trivyignore.yaml rendered
