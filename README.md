@@ -45,6 +45,8 @@ read-only `GITHUB_TOKEN`.
 flowchart LR
   app[app: lint + test] --> image
   app --> sonar
+  image --> integration
+  chart --> integration
 ```
 
 | Check | Workflow | Runs on | What it checks | Required |
@@ -58,6 +60,9 @@ flowchart LR
 **Image identity.** The image is identified by the git tree hash of `app/` (`app-<tree>` tag). On a push, if that
 image already exists it is reused, so promoting `develop → qa → main` deploys the exact bytes that were tested.
 Deployments always use the digest (`image@sha256:...`), never a tag.
+
+| `chart / validate` | `chart.yml` | every run | Both charts rendered for dev/qa/prod with and without HPA, `helm lint --strict`, kubeconform schemas, Trivy misconfiguration scan | yes |
+| `integration / kind` | `integration.yml` | pull requests | Ephemeral kind cluster: installs the PR image with the PR charts, waits for 2 replicas, runs `helm test`, upgrades (pre-upgrade backup + migration), tests again, checks the backup and the Ingress | yes |
 ## Kubernetes resources
 
 Two charts:
