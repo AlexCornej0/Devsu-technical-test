@@ -55,8 +55,7 @@ jobs:
     permissions:
       contents: read
       id-token: write # OIDC token for Workload Identity Federation (no JSON keys)
-    environment: ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'qa' && 'qa' || 'dev' }}
-    secrets: inherit # caller job with environment: env secrets flow to the reusable job
+    secrets: inherit # carries repo-level secrets into the reusable deploy job
     with:
       environment: ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'qa' && 'qa' || 'dev' }}
       digest: ${{ needs.image.outputs.digest }}
