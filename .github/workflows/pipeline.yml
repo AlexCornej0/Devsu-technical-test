@@ -1,0 +1,62 @@
+name: pipeline
+
+on:
+  pull_request:
+    branches: [develop, qa, main]
+  push:
+    branches: [develop, qa, main]
+  workflow_dispatch:
+
+# Least privilege by default
+permissions:
+  contents: read
+
+concurrency:
+  group: pipeline-${{ github.ref }}
+  # New commits on a PR cancel the old run
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  app:
+    uses: ./.github/workflows/app-ci.yml
+
+  sonar:
+    if: (github.event_name == 'push' && github.ref_name == 'develop') || github.base_ref == 'develop'
+    needs: app
+    uses: ./.github/workflows/sonar.yml
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  image:
+    needs: app
+    uses: ./.github/workflows/image.yml
+    permissions:
+      contents: read
+      packages: write
+      security-events: write
+      id-token: write
+      attestations: write
+
+  chart:
+    uses: ./.github/workflows/chart.yml
+
+  integration:
+    if: github.event_name == 'pull_request'
+    needs: [image, chart]
+    uses: ./.github/workflows/integration.yml
+
+  iac:
+    uses: ./.github/workflows/iac.yml
+
+  deploy:
+    if: github.event_name != 'pull_request' && contains(fromJSON('["develop", "qa", "main"]'), github.ref_name)
+    needs: [image, chart, iac]
+    uses: ./.github/workflows/deploy.yml
+    permissions:
+      contents: read
+      id-token: write # OIDC token for Workload Identity Federation (no JSON keys)
+    secrets: inherit # environment secrets (e.g. DJANGO_SECRET_KEY) reach the reusable job
+    with:
+      environment: ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'qa' && 'qa' || 'dev' }}
+      digest: ${{ needs.image.outputs.digest }}
+      reused: ${{ needs.image.outputs.reused }}

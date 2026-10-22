@@ -1,0 +1,50 @@
+name: iac
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+env:
+  TERRAFORM_VERSION: 1.16.6
+  TFLINT_VERSION: v0.64.0
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: infra/terraform
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform_wrapper: false
+      - uses: terraform-linters/setup-tflint@6ffdbaa3be476b3431f7275c26966ef32ff60337
+        with:
+          tflint_version: ${{ env.TFLINT_VERSION }}
+      - name: Install Trivy
+        working-directory: .
+        run: scripts/install-tool.sh trivy
+      - name: Format
+        run: terraform fmt -check -recursive -diff
+      - name: Validate every stack (no backend, no credentials)
+        run: |
+          for stack in stacks/*/; do
+            echo "::group::$stack"
+            terraform -chdir="$stack" init -backend=false -input=false -lockfile=readonly
+            terraform -chdir="$stack" validate
+            echo "::endgroup::"
+          done
+      - name: TFLint
+        env:
+          GITHUB_TOKEN: ${{ github.token }} # avoids the API rate limit when downloading the plugin
+        run: |
+          tflint --init --config "$PWD/.tflint.hcl"
+          tflint --recursive --config "$PWD/.tflint.hcl"
+      - name: Misconfiguration scan (Trivy)
+        run: trivy config --exit-code 1 --severity CRITICAL,HIGH --ignorefile ../../.trivyignore.yaml .

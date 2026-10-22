@@ -1,0 +1,5 @@
+{{ include "demo.name" . }} deployed to namespace {{ .Release.Namespace }}.
+
+  URL:          http://{{ .Values.ingress.host }}/api/users/
+  Smoke test:   helm test {{ .Release.Name }} -n {{ .Release.Namespace }} --logs
+  Rollback:     helm history {{ .Release.Name }} -n {{ .Release.Namespace }}  then  helm rollback {{ .Release.Name }} <REVISION> -n {{ .Release.Namespace }}

@@ -218,3 +218,31 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+#app
+app/.venv/
+app/db.sqlite3
+app/.env
+app/__pycache__/
+app/*.log
+app/*.pot
+app/*.pyc
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+tfplan
+
+# Django
+staticfiles/
+
+# Chart validation (CI)
+rendered/
+
+# Documents
+.docs/
+
+# Screenshots (local evidence only - goes in the deliverable zip, never in the repo)
+docs/capturas de pantalla/

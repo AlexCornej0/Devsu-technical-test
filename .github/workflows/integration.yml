@@ -1,0 +1,80 @@
+name: integration
+
+# Needs the "image" artifact (image.tar) uploaded by image.yml in the same run.
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+env:
+  HELM_VERSION: v4.3.1
+  KIND_VERSION: v0.33.0
+  KIND_NODE_IMAGE: kindest/node:v1.37.0@sha256:a1ed56cfb0e7b93589bdf97c8cd566405a265939e3620fc4f5de89adff580ae5
+  TRAEFIK_CHART_VERSION: 42.0.0
+  METRICS_SERVER_CHART_VERSION: 3.14.0
+
+jobs:
+  kind:
+    runs-on: ubuntu-24.04
+    env:
+      NS: ci
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        with:
+          name: image
+      - uses: helm/kind-action@1544676c07bb3570fcb70166beaa07c4528fd4aa
+        with:
+          version: ${{ env.KIND_VERSION }}
+          node_image: ${{ env.KIND_NODE_IMAGE }}
+          cluster_name: ci
+          wait: 120s
+      - name: Load the PR image into kind (never pushed to a registry)
+        run: kind load image-archive image.tar --name ci
+      - uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310
+        with:
+          version: ${{ env.HELM_VERSION }}
+      - name: Cluster add-ons (metrics-server for the HPA, Traefik for the Ingress)
+        run: |
+          helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
+          helm repo add traefik https://traefik.github.io/charts
+          helm repo update
+          helm upgrade --install metrics-server metrics-server/metrics-server -n kube-system \
+            --version "$METRICS_SERVER_CHART_VERSION" --set 'args={--kubelet-insecure-tls}' --wait --timeout 3m
+          helm upgrade --install traefik traefik/traefik -n traefik --create-namespace \
+            --version "$TRAEFIK_CHART_VERSION" --set service.spec.type=ClusterIP --wait --timeout 3m
+      - name: Namespace bootstrap (PVC) and secret
+        run: |
+          helm upgrade --install bootstrap k8s/bootstrap -n "$NS" --create-namespace --set rbac.enabled=false
+          # Random key for this throwaway cluster; it is never printed
+          kubectl -n "$NS" create secret generic demo-secrets \
+            --from-literal=DJANGO_SECRET_KEY="$(python3 -c 'import secrets; print(secrets.token_urlsafe(50))')"
+      - name: Install
+        run: |
+          helm upgrade --install demo k8s/demo-chart -n "$NS" -f k8s/demo-chart/values-dev.yaml \
+            --set image.repository=demo-api --set image.tag=ci --set image.pullPolicy=Never \
+            --set ingress.host=ci.local --rollback-on-failure --timeout 5m
+      - run: scripts/wait-available.sh "$NS" demo 2 180
+      - run: helm test demo -n "$NS" --logs
+      - name: Upgrade (runs the pre-upgrade backup and migration again)
+        run: |
+          helm upgrade --install demo k8s/demo-chart -n "$NS" -f k8s/demo-chart/values-dev.yaml \
+            --set image.repository=demo-api --set image.tag=ci --set image.pullPolicy=Never \
+            --set ingress.host=ci.local --set-string podAnnotations.ci-run=2 \
+            --rollback-on-failure --timeout 5m
+      - run: scripts/wait-available.sh "$NS" demo 2 180
+      - run: helm test demo -n "$NS" --logs
+      - name: A backup was taken before the upgrade migration
+        run: |
+          kubectl -n "$NS" exec deploy/demo -- ls -l /data/backups | tee backups.txt
+          grep -q -- '-r2\.sqlite3' backups.txt
+      - name: The Ingress routes to the app
+        run: |
+          kubectl -n traefik port-forward svc/traefik 8080:80 > port-forward.log 2>&1 &
+          curl -fsS --retry 10 --retry-delay 2 --retry-all-errors -H "Host: ci.local" http://127.0.0.1:8080/api/users/
+      - name: Diagnostics
+        if: failure()
+        run: scripts/diagnostics.sh "$NS"
