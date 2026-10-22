@@ -102,13 +102,29 @@ flowchart LR
 | `sonar / scan` | `sonar.yml` | `develop` and PRs to `develop` | SonarQube Cloud static analysis and coverage | no (free plan) |
 | `analyze` | `codeql.yml` | every run except Dependabot, and weekly | CodeQL security queries for Python and for the workflows | no |
 | `image / build` | `image.yml` | every run | Build, Trivy (fails on fixable HIGH/CRITICAL), publish to GHCR only on merge, provenance attestation | yes |
+| `iac / validate` | `iac.yml` | every run | `terraform fmt -check` + `terraform validate` on every stack, tflint | yes |
 
 **Image identity.** The image is identified by the git tree hash of `app/` (`app-<tree>` tag). On a push, if that
 image already exists it is reused, so promoting `develop → qa → main` deploys the exact bytes that were tested.
 Deployments always use the digest (`image@sha256:...`), never a tag.
 
 | `chart / validate` | `chart.yml` | every run | Both charts rendered for dev/qa/prod with and without HPA, `helm lint --strict`, kubeconform schemas, Trivy misconfiguration scan | yes |
+| `deploy / gke` | `deploy.yml` (reusable) | after integration on merges to `develop` / `qa` / `main` | Workload Identity auth, `helm upgrade` by digest, smoke over HTTPS, automatic rollback on failure; `prod` requires environment approval | yes |
+| `uptime` | `uptime.yml` | scheduled every 6 h (default branch) | Probes `PROD_URL/health/ready` and `/api/users/`; currently red until `prod` has a real deployment - it activates with the first merge to `main` | no (scheduler) |
 | `integration / kind` | `integration.yml` | pull requests | Ephemeral kind cluster: installs the PR image with the PR charts, waits for 2 replicas, runs `helm test`, upgrades (pre-upgrade backup + migration), tests again, checks the backup and the Ingress | yes |
+### GitHub inputs (created by Terraform stack `40-github`)
+
+| Variable / secret | Where | Value |
+| --- | --- | --- |
+| `GCP_PROJECT_ID` | repo variable | `portfolio-platform-9ba0` |
+| `GKE_CLUSTER` | repo variable | `portfolio-gke` |
+| `GKE_LOCATION` | repo variable | `us-central1-c` |
+| `WIF_PROVIDER` | repo variable | full resource path of the OIDC provider in the Workload Identity pool |
+| `PROD_URL` | repo variable | `https://app.bspmsoftware.com` (public URL of `prod`) |
+| `APP_HOST` | env variable (`dev` / `qa` / `prod`) | the public host each environment serves |
+| `DEPLOYER_SA` | env variable (`dev` / `qa` / `prod`) | service account the deploy job impersonates |
+| `DJANGO_SECRET_KEY` | repo + env secrets | fixed external value; applied to the cluster via stdin |
+
 ## Kubernetes resources
 
 Two charts:
