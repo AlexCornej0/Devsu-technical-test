@@ -1,0 +1,12 @@
+# PersistentVolumeClaim shared by every replica of the app
+storage:
+  claimName: demo-data
+  size: 10Gi
+  storageClassName: ""
+
+# Namespace-scoped permissions for the CI/CD identity
+rbac:
+  enabled: true
+
+# Google service account email of the deployer for this namespace 
+deployer: ""

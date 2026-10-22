@@ -1,0 +1,24 @@
+output "network_id" {
+  description = "VPC ID"
+  value       = google_compute_network.this.id
+}
+
+output "subnet_id" {
+  description = "Subnet ID"
+  value       = google_compute_subnetwork.this.id
+}
+
+output "pods_range_name" {
+  description = "Name of the secondary range for pods"
+  value       = google_compute_subnetwork.this.secondary_ip_range[0].range_name
+}
+
+output "services_range_name" {
+  description = "Name of the secondary range for services"
+  value       = google_compute_subnetwork.this.secondary_ip_range[1].range_name
+}
+
+output "ingress_ip" {
+  description = "Static external IP for the ingress controller"
+  value       = google_compute_address.ingress.address
+}
