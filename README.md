@@ -35,7 +35,6 @@ a trusted, non-self-signed certificate.
 app/                         Django project (REST API), Dockerfile inside
 .github/workflows/           pipeline.yml (orchestrator) + one reusable workflow per stage
 docs/iac/                    terraform apply + output logs, one file per stack
-docs/capturas de pantalla/   pipeline result screenshots
 infra/terraform/stacks/      00-bootstrap, 10-foundation, 20-platform, 30-cluster, 40-github
 infra/terraform/modules/     project, network, gke, github-wif
 k8s/bootstrap/               once-per-namespace chart: PVC + deployer RBAC (kept out of releases)
@@ -204,9 +203,7 @@ Destroy in reverse order (40 → 10). Delete the PVCs before `20-platform`, or t
 - Deployed app on GKE:
   [run 39700454268](https://github.com/AlexCornej0/Devsu-technical-test/actions/runs/39700454268)
   and the live URL above.
-- Screenshots: `docs/capturas de pantalla/` (Actions summary of the deploy on develop, and the
-  lint/analysis workflow).
-- Terraform apply and output logs per stack: [`docs/iac/`](docs/iac/).
+- Screenshots of the green run: see the Actions runs linked above (public).- Terraform apply and output logs per stack: [`docs/iac/`](docs/iac/).
 
 ## Design decisions and trade-offs
 

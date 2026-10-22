@@ -243,3 +243,6 @@ rendered/
 
 # Documents
 .docs/
+
+# Screenshots (local evidence only - goes in the deliverable zip, never in the repo)
+docs/capturas de pantalla/
