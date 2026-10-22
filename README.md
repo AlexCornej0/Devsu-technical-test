@@ -1,5 +1,7 @@
 # Devsu DevOps Technical Test
 
+*(Versión en español: [README.es.md](README.es.md))*
+
 Prueba técnica DevOps - BP. Django API on GKE, entire platform as code, zero-touch CI/CD.
 
 ## Overview
@@ -25,9 +27,10 @@ builds, tests, scans, publishes and deploys the app with zero manual steps.
 | qa | https://qa.bspmsoftware.com/api/users/ | every merge to `qa` |
 | prod | https://app.bspmsoftware.com/api/users/ | merges to `main`, requires approval on the `prod` environment |
 
-TLS terminates at the Cloudflare edge with a real certificate for the domain; between Cloudflare and
-the GKE load balancer traffic stays HTTP by design (Cloudflare `Full` mode). The browser always sees
-a trusted, non-self-signed certificate.
+TLS terminates at the Cloudflare edge with a real certificate for the domain, so the browser always
+sees a trusted connection. The hop between Cloudflare and the GKE load balancer is not encrypted
+today (the origin serves the Traefik self-signed certificate); closing it with cert-manager is the
+first production recommendation below.
 
 ## Repository structure
 
@@ -102,13 +105,30 @@ flowchart LR
 | `sonar / scan` | `sonar.yml` | `develop` and PRs to `develop` | SonarQube Cloud static analysis and coverage | no (free plan) |
 | `analyze` | `codeql.yml` | every run except Dependabot, and weekly | CodeQL security queries for Python and for the workflows | no |
 | `image / build` | `image.yml` | every run | Build, Trivy (fails on fixable HIGH/CRITICAL), publish to GHCR only on merge, provenance attestation | yes |
+| `iac / validate` | `iac.yml` | every run | `terraform fmt -check` + `terraform validate` on every stack, tflint | yes |
 
 **Image identity.** The image is identified by the git tree hash of `app/` (`app-<tree>` tag). On a push, if that
 image already exists it is reused, so promoting `develop → qa → main` deploys the exact bytes that were tested.
 Deployments always use the digest (`image@sha256:...`), never a tag.
 
 | `chart / validate` | `chart.yml` | every run | Both charts rendered for dev/qa/prod with and without HPA, `helm lint --strict`, kubeconform schemas, Trivy misconfiguration scan | yes |
+| `deploy / gke` | `deploy.yml` (reusable) | after integration on merges to `develop` / `qa` / `main` | Workload Identity auth, `helm upgrade` by digest, smoke over HTTPS, automatic rollback on failure; `prod` requires environment approval | yes |
+| `uptime` | `uptime.yml` | scheduled every 6 h (default branch) | Probes `PROD_URL/health/ready` and `/api/users/`; currently red until `prod` has a real deployment - it activates with the first merge to `main` | no (scheduler) |
 | `integration / kind` | `integration.yml` | pull requests | Ephemeral kind cluster: installs the PR image with the PR charts, waits for 2 replicas, runs `helm test`, upgrades (pre-upgrade backup + migration), tests again, checks the backup and the Ingress | yes |
+
+### GitHub inputs (created by Terraform stack `40-github`)
+
+| Variable / secret | Where | Value |
+| --- | --- | --- |
+| `GCP_PROJECT_ID` | repo variable | `portfolio-platform-9ba0` |
+| `GKE_CLUSTER` | repo variable | `portfolio-gke` |
+| `GKE_LOCATION` | repo variable | `us-central1-c` |
+| `WIF_PROVIDER` | repo variable | full resource path of the OIDC provider in the Workload Identity pool |
+| `PROD_URL` | repo variable | `https://app.bspmsoftware.com` (public URL of `prod`) |
+| `APP_HOST` | env variable (`dev` / `qa` / `prod`) | the public host each environment serves |
+| `DEPLOYER_SA` | env variable (`dev` / `qa` / `prod`) | service account the deploy job impersonates |
+| `DJANGO_SECRET_KEY` | repo + env secrets | fixed external value; applied to the cluster via stdin |
+
 ## Kubernetes resources
 
 Two charts:
@@ -149,6 +169,7 @@ flowchart LR
 | `tests/smoke-test.yaml` | `helm test`: readiness, then create, read and delete a user through the Service |
 
 The `DJANGO_SECRET_KEY` Secret is created by the pipeline out of the GitHub secret (pinned by the user, fixed value) and applied via stdin; it is never in the repository or in Helm values.
+
 ## Infrastructure as Code
 
 Everything after `gcloud auth login` is Terraform: 5 stacks applied in order, each with its own state in a
@@ -173,6 +194,7 @@ terraform -chdir=infra/terraform/stacks/<stack> apply tfplan
 ```
 
 Destroy in reverse order (40 → 10). Delete the PVCs before `20-platform`, or their disks outlive the cluster.
+
 ## Security
 
 - **No long-lived cloud credentials anywhere**: GitHub authenticates to GCP through Workload Identity
@@ -196,14 +218,17 @@ Destroy in reverse order (40 → 10). Delete the PVCs before `20-platform`, or t
 
 ## Evidence
 
-- Green pipeline on `develop`
+- Green full pipeline (the PR run)
   ([run 39700019798](https://github.com/AlexCornej0/Devsu-technical-test/actions/runs/39700019798)):
   build, lint, tests with coverage, Sonar, Trivy, chart validation, kind integration test - all
-  passing; deploy skipped on that run by design (merge-commit run, not PR).
-- Deployed app on GKE:
-  [run 39700454268](https://github.com/AlexCornej0/Devsu-technical-test/actions/runs/39700454268)
-  and the live URL above.
-- Screenshots of the green run: see the Actions runs linked above (public).- Terraform apply and output logs per stack: [`docs/iac/`](docs/iac/).
+  passing. Deploys are skipped on PRs by design and run on merges.
+- Green deploy to GKE
+  ([run 39705548984](https://github.com/AlexCornej0/Devsu-technical-test/actions/runs/39705548984)):
+  WIF auth, helm upgrade by digest, smoke over HTTPS, all passing.
+- The app answering on the live URL above runs in GKE on that exact digest.
+- Run screenshots: Actions logs require a GitHub session, so screenshots travel in the deliverable
+  zip, not in this repository.
+- Terraform apply and output logs per stack: [`docs/iac/`](docs/iac/).
 
 ## Design decisions and trade-offs
 
@@ -213,14 +238,17 @@ Destroy in reverse order (40 → 10). Delete the PVCs before `20-platform`, or t
   trade-off below.
 - **Digest-pinned deploys, tree-hash image reuse**: `develop → qa → main` promotes the exact tested
   bytes; the image is rebuilt only when `app/` changes.
-- **Cloudflare for TLS instead of Lets Encrypt on the cluster**: a personal test cluster gets a real
+- **Cloudflare for TLS instead of Let's Encrypt on the cluster**: a personal test cluster gets a real
   certificate with zero renewal logic in the cluster; a domain on Cloudflare was already available.
-  Trade-off: origin still serves HTTP, mitigated by Cloudflare-only ingress ports in the firewall.
+- **Bot protection and CI coexistence**: Cloudflare initially 403'd the GitHub runners; the health
+  paths are reachable for CI datacenter IPs (bot fight off / skip rules for `/health/*` and
+  `/api/users/`).
+  Trade-off: the origin load balancer also accepts plain HTTP from any source today - restricting source IPs to Cloudflare ranges is a pending production item.
 - **Environments as GitHub environments, not workflow branches of config**: the deploy workflow is a
   `workflow_call`; branch `develop` targets env `dev`, `qa` branch targets `qa`, `main` targets
   `prod` with required approval. One reusable file, three gates.
 - **Rollback-first deploys**: smoke after rollout; on failure `helm rollback` to the last superseded
-  revision. Failed deploys never leave a broken app exposed (the 00:33 run proved it).
+  revision. The path is exercised in the kind integration test (upgrade, fail scenario, rollback, re-test).
 
 ## Operations runbook
 
@@ -235,9 +263,11 @@ Destroy in reverse order (40 → 10). Delete the PVCs before `20-platform`, or t
 
 ## Not done and why
 
-- **Lets Encrypt / cert-manager in the cluster**: replaced by Cloudflare edge TLS; the origin still
+- **Let's Encrypt / cert-manager in the cluster**: replaced by Cloudflare edge TLS; the origin still
   speaks HTTP to the Cloudflare proxy. If the domain ever leaves Cloudflare, cert-manager is the
   documented next step.
+- **Origin open to non-Cloudflare sources**: the GCP load balancer still accepts plain HTTP from
+  any IP; the fix is a firewall rule restricted to Cloudflare ranges (production item 1 and 2).
 - **Monitoring stack (Prometheus/Grafana)**: the chart exposes pod metrics, and the exercise only
   required horizontal scaling - documented in Production recommendations instead.
 
@@ -248,8 +278,8 @@ Destroy in reverse order (40 → 10). Delete the PVCs before `20-platform`, or t
 2. **PostgreSQL + separate secret store** (External Secrets Operator against GCP Secret Manager)
    instead of SQLite; HPA ceiling disappears.
 3. **Monitoring**: Prometheus + Grafana + alerting on latency/error budget; Sentry for app errors.
-4. **Autoscaling the node pool** and a PodDisruptionBudget per environment (already in the chart).
+4. **Autoscaling the node pool** so pod autoscaling is not bounded by node capacity.
 5. **Backups**: scheduled disk-level or Litestream-based SQLite backups if SQLite is kept; WAL
    archiving if Postgres is adopted.
-6. **CI harderening**: environment-specific image vulnerability gates for `main` deploy, and
+6. **CI hardening**: environment-specific image vulnerability gates for `main` deploy, and
    a signed image attestation (`cosign`) verified at admission.
