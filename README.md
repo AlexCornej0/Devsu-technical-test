@@ -222,9 +222,10 @@ Destroy in reverse order (40 → 10). Delete the PVCs before `20-platform`, or t
   ([run 39700019798](https://github.com/AlexCornej0/Devsu-technical-test/actions/runs/39700019798)):
   build, lint, tests with coverage, Sonar, Trivy, chart validation, kind integration test - all
   passing. Deploys are skipped on PRs by design and run on merges.
-- The app answering on the live URL above runs in GKE on the digest published at merge time; the
-  post-deploy public smoke in those merge runs fails with 403 because Cloudflare blocks datacenter
-  IPs (documented under Not done and why).
+- Green deploy to GKE
+  ([run 39705548984](https://github.com/AlexCornej0/Devsu-technical-test/actions/runs/39705548984)):
+  WIF auth, helm upgrade by digest, smoke over HTTPS, all passing.
+- The app answering on the live URL above runs in GKE on that exact digest.
 - Run screenshots: Actions logs require a GitHub session, so screenshots travel in the deliverable
   zip, not in this repository.
 - Terraform apply and output logs per stack: [`docs/iac/`](docs/iac/).
@@ -239,6 +240,9 @@ Destroy in reverse order (40 → 10). Delete the PVCs before `20-platform`, or t
   bytes; the image is rebuilt only when `app/` changes.
 - **Cloudflare for TLS instead of Let's Encrypt on the cluster**: a personal test cluster gets a real
   certificate with zero renewal logic in the cluster; a domain on Cloudflare was already available.
+- **Bot protection and CI coexistence**: Cloudflare initially 403'd the GitHub runners; the health
+  paths are reachable for CI datacenter IPs (bot fight off / skip rules for `/health/*` and
+  `/api/users/`).
   Trade-off: the origin load balancer also accepts plain HTTP from any source today - restricting source IPs to Cloudflare ranges is a pending production item.
 - **Environments as GitHub environments, not workflow branches of config**: the deploy workflow is a
   `workflow_call`; branch `develop` targets env `dev`, `qa` branch targets `qa`, `main` targets
@@ -262,10 +266,6 @@ Destroy in reverse order (40 → 10). Delete the PVCs before `20-platform`, or t
 - **Let's Encrypt / cert-manager in the cluster**: replaced by Cloudflare edge TLS; the origin still
   speaks HTTP to the Cloudflare proxy. If the domain ever leaves Cloudflare, cert-manager is the
   documented next step.
-- **Cloudflare blocks datacenter IPs**: the GitHub-runner smoke gets 403 from the Cloudflare edge
-  (bot protection). Options: a WAF skip rule for the health paths, or moving the post-deploy smoke
-  inside the cluster against the Service. Until then the public smoke fails while the app itself
-  is healthy (verified from a residential connection).
 - **Origin open to non-Cloudflare sources**: the GCP load balancer still accepts plain HTTP from
   any IP; the fix is a firewall rule restricted to Cloudflare ranges (production item 1 and 2).
 - **Monitoring stack (Prometheus/Grafana)**: the chart exposes pod metrics, and the exercise only

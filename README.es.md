@@ -203,9 +203,10 @@ Se destruye en orden inverso (40 → 10). Borrar los PVCs antes de `20-platform`
   ([run 39700019798](https://github.com/AlexCornej0/Devsu-technical-test/actions/runs/39700019798)):
   build, lint, pruebas con cobertura, Sonar, Trivy, validación de charts, integration en kind - todo
   pasando. Los despliegues se saltan en PRs por diseño y corren en los merges.
-- La app que responde en la URL pública de arriba corre en GKE sobre el digest publicado al momento
-  del merge; el smoke público post-despliegue de esos runs de merge falla con 403 porque Cloudflare
-  bloquea IPs de datacenter (documentado en "No hecho y por qué").
+- Despliegue verde en GKE
+  ([run 39705548984](https://github.com/AlexCornej0/Devsu-technical-test/actions/runs/39705548984)):
+  auth WIF, helm upgrade por digest, smoke por HTTPS, todo pasando.
+- La app que responde en la URL pública de arriba corre en GKE sobre ese digest exacto.
 - Capturas de pantalla de los runs: los logs de Actions requieren sesión de GitHub, así que las
   capturas viajan en el zip del entregable, no en este repositorio.
 - Logs de apply y de salidas de Terraform por stack: [`docs/iac/`](docs/iac/).
@@ -220,7 +221,10 @@ Se destruye en orden inverso (40 → 10). Borrar los PVCs antes de `20-platform`
   los bytes exactos probados; la imagen solo se reconstruye cuando `app/` cambia.
 - **Cloudflare para TLS en lugar de Let's Encrypt en el clúster**: un clúster de prueba personal
   obtiene un certificado real sin lógica de renovación en el clúster; ya había un dominio en
-  Cloudflare. Trade-off: el balanceador de origen también acepta HTTP plano de cualquier fuente hoy -
+  Cloudflare.
+- **Coexistencia de protección anti-bot y CI**: Cloudflare al inicio devolvía 403 a los runners de
+  GitHub; los paths de salud quedan alcanzables para IPs de datacenter de CI (bot fight off / reglas
+  skip para `/health/*` y `/api/users/`). Trade-off: el balanceador de origen también acepta HTTP plano de cualquier fuente hoy -
   restringir las IPs de origen a los rangos de Cloudflare es un pendiente de producción.
 - **Ambientes como GitHub environments, no variantes de configuración por rama del workflow**: el
   workflow de despliegue es un `workflow_call`; la rama `develop` apunta al environment `dev`, la
@@ -245,10 +249,6 @@ Se destruye en orden inverso (40 → 10). Borrar los PVCs antes de `20-platform`
 - **Let's Encrypt / cert-manager en el clúster**: reemplazado por TLS en el edge de Cloudflare; el
   origen todavía habla HTTP con el proxy de Cloudflare. Si el dominio sale de Cloudflare,
   cert-manager es el siguiente paso documentado.
-- **Cloudflare bloquea IPs de datacenter**: el smoke del runner de GitHub recibe 403 del edge de
-  Cloudflare (protección anti-bot). Opciones: una regla WAF skip para los paths de salud, o mover el
-  smoke post-despliegue dentro del clúster contra el Service. Hasta entonces, el smoke público falla
-  mientras la app en sí está sana (verificado desde una conexión residencial).
 - **Origen abierto a fuentes que no son Cloudflare**: el balanceador de GCP todavía acepta HTTP plano
   de cualquier IP; el fix es una regla de firewall restringida a los rangos de Cloudflare
   (ítems de producción 1 y 2).
