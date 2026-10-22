@@ -109,7 +109,7 @@ jobs:
       - name: Public URL answers
         id: verify
         run: |
-          url="http://$APP_HOST"
+          url="https://$APP_HOST"
           curl -fsS --retry 10 --retry-delay 6 --retry-all-errors "$url/health/ready"
           curl -fsS "$url/api/users/" > /dev/null
           echo "url=$url/api/users/" >> "$GITHUB_OUTPUT"
@@ -123,7 +123,7 @@ jobs:
             echo "### Deploy to \`$NS\`"
             echo "| Field | Value |"
             echo "| --- | --- |"
-            echo "| URL | http://$APP_HOST/api/users/ |"
+            echo "| URL | https://$APP_HOST/api/users/ |"
             echo "| Digest | \`$DIGEST\` |"
             echo "| Reused image | $REUSED |"
             echo
