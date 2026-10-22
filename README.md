@@ -238,8 +238,6 @@ Destroy in reverse order (40 → 10). Delete the PVCs before `20-platform`, or t
 - **Lets Encrypt / cert-manager in the cluster**: replaced by Cloudflare edge TLS; the origin still
   speaks HTTP to the Cloudflare proxy. If the domain ever leaves Cloudflare, cert-manager is the
   documented next step.
-- **PostgreSQL**: outside the scope of the exercise; the app was shipped with SQLite. The chart
-  already isolates storage in a PVC, so switching the backend does not touch the deployment shape.
 - **Monitoring stack (Prometheus/Grafana)**: the chart exposes pod metrics, and the exercise only
   required horizontal scaling - documented in Production recommendations instead.
 
