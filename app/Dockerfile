@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ---------- build the virtualenv ----------
-FROM python:3.14-slim@sha256:a2b82f3c48559aa0a8446d9af49826b6e2b2016f4cd2afabfe6013ec53729170 AS builder
+FROM python:3.15-slim@sha256:65a65fc7b30b06cb6df4930fd4650697cb23f4c2698ab81fc87e4b031bc36928 AS builder
 
 WORKDIR /build
 COPY requirements.txt .
@@ -10,7 +10,7 @@ RUN python -m venv /opt/venv \
  && /opt/venv/bin/pip uninstall --yes --root-user-action=ignore pip
 
 # ---------- minimal runtime ----------
-FROM python:3.14-slim@sha256:a2b82f3c48559aa0a8446d9af49826b6e2b2016f4cd2afabfe6013ec53729170 AS runtime
+FROM python:3.15-slim@sha256:65a65fc7b30b06cb6df4930fd4650697cb23f4c2698ab81fc87e4b031bc36928 AS runtime
 
 LABEL org.opencontainers.image.source="https://github.com/AlexCornej0/Devsu-technical-test" \
       org.opencontainers.image.title="demo-devops-python" \
