@@ -14,7 +14,9 @@ FROM python:3.14-slim@sha256:ac25e5afbfdb4a94ff99cc24b0345719210133144481480bcba
 
 # security base bump: zlib1g CVE-2026-76844 (fixed 1:1.3.dfsg+really1.3.1-1+deb13u1) and apt refresh
 RUN apt-get update \
- && apt-get install --yes --only-upgrade zlib1g apt \
+ && apt-get install --yes --no-install-recommends --only-upgrade \
+      zlib1g=1:1.3.dfsg+really1.3.1-1+deb13u1 \
+      apt=3.0.4 \
  && rm -rf /var/lib/apt/lists/*
 
 LABEL org.opencontainers.image.source="https://github.com/AlexCornej0/Devsu-technical-test" \
